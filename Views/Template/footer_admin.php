@@ -1,6 +1,6 @@
     <script>
         const base_url = "<?= base_url(); ?>";
-        const smony = "<?= SMONEY; ?>";
+        const rfcEmpresa = "<?= RFC; ?>";
     </script>
     <!-- Essential javascripts for application to work-->
     <script src="<?= media(); ?>/js/jquery-3.3.1.min.js"></script>

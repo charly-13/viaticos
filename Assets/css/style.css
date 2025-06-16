@@ -436,3 +436,61 @@
   .btn-comprobante i {
     font-size: 1rem;
   }
+
+    .bg-section { background-color: #e9ecef; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; }
+
+    #resumenTotalGastos{
+      font-size: 20px;
+      color: #28a745!important;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .col-th{
+      width: 190px;
+    }
+
+      .bg-section {
+    background-color: #fff;
+    border-left: 4px solid #e97e2e;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .bg-section strong {
+    color: #e97e2e;
+    font-size: 1.1rem;
+  }
+
+  .form-label {
+    color: #333;
+  }
+
+  .form-control {
+    border-radius: 0.375rem;
+  }
+
+  .form-control:focus {
+    border-color: #e97e2e;
+    box-shadow: 0 0 0 0.2rem rgba(233, 126, 46, 0.25);
+  }
+
+  .btn-primary {
+    background-color: #e97e2e;
+    border-color: #e97e2e;
+  }
+
+  .btn-primary:hover {
+    background-color: #cf6c20;
+    border-color: #cf6c20;
+  }
+
+  .datos-xml {
+    font-size: 0.9rem;
+    color: #555;
+    background: #f9f9f9;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+  }

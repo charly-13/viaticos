@@ -1,5 +1,5 @@
 <?php headerAdmin($data);
-getModal('modalValidacionuno', $data);
+getModal('modalAddCpmprobantes', $data);
 getModal('modalValidacionJefaturaSuperior', $data);
 getModal('modalValidacionCompras', $data);
 ?>
@@ -22,11 +22,12 @@ getModal('modalValidacionCompras', $data);
         <?php } else {
           $usuarioSolicita = $data['arrSolicitud']['viaticos'];
           $detalle = $data['arrSolicitud']['detalle'];
+            $usuarioSolicita = $data['arrSolicitud']['viaticos'];
         ?>
           <section id="sPedido" class="invoice">
             <div class="row mb-4 align-items-center">
               <div class="col-6">
-                <img src="<?= media(); ?>/tienda/images/ldr.png" style="height: 80px;">
+                <h2 class="page-header"><img src="<?= media(); ?>/images/ldr.png" style="height: 100px;"></h2>
               </div>
               <div class="col-6 text-right">
                 <h5>FOLIO: <strong><?= $usuarioSolicita['codigo_solicitud'] ?></strong></h5>
@@ -46,7 +47,7 @@ getModal('modalValidacionCompras', $data);
                     <th class="text-center">Días</th>
                     <th class="text-center">Monto Diario</th>
                     <th class="text-right">Subtotal</th>
-                    <th class="text-center">Opciones</th>
+                    <th class="text-center col-th">Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -63,7 +64,7 @@ getModal('modalValidacionCompras', $data);
                         <td class="text-center">
 
                           <!-- Botón Agregar Comprobante --> 
-                          <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idconcepto'] ?>,<?= $concepto['dias'] ?>)">
+                          <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idVIATICO'] ?>,<?= $concepto['idconcepto'] ?><?= $concepto['dias'] ?>, '<?= $usuarioSolicita['fecha_salida'] ?>')">
                             <i class="fas fa-plus-circle"></i> Agregar
                           </button>
 
@@ -76,7 +77,7 @@ getModal('modalValidacionCompras', $data);
                       </tr>
                   <?php }
                   } ?>
-                </tbody>
+                </tbody> 
                 <tfoot>
                   <tr>
                     <th colspan="4" class="text-right">TOTAL:</th>

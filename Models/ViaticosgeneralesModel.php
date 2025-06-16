@@ -25,6 +25,14 @@ class ViaticosgeneralesModel extends Mysql
 	public $strTotal;
 	public $intDias;
 	public $strComentarios;
+	public $intConcepto;
+	public $intConceptoid;
+	public $strRutaxml;
+	public $stRrutapdf;
+	public $strUuid;
+	public $strRfcemisor;
+	public $strSubtotal;
+	public $strFechafactura;
 
 	public function __construct()
 	{
@@ -271,56 +279,59 @@ class ViaticosgeneralesModel extends Mysql
 
 		return $request;
 	}
+
 	
 
-			public function gestionCompras(int $dviatico , int $estado, string $comentariosCompras)
+	
+	public function inserComprobantesViaticos(int $concepto, int $conceptoid, string $rutaxml, string $rutapdf, string $fecha, string $comentarios, string $uuid, string $rfcemisor , $subtotal, $total, $fechafactura)
 	{
-		$this->intViaticoid = $dviatico ;
-		$this->intEstado = $estado;
-		$this->strComentarios = $comentariosCompras;
+
+		$return = 0;
+		$this->intConcepto = $concepto;
+		$this->intConceptoid = $conceptoid;
+		$this->strRutaxml = $rutaxml;
+		$this->stRrutapdf = $rutapdf;
+		$this->strFecha_salida = $fecha;
+		$this->strComentarios = $comentarios;
+		$this->strUuid = $uuid;
+		$this->strRfcemisor = $rfcemisor;
+		$this->strSubtotal = $subtotal;
+		$this->strTotal = $total;
+		$this->strFechafactura = $fechafactura;
 
 
-			$sql = "UPDATE viaticos_generales SET estado = ?, comentarioscompras = ?,  fechacompras = NOW() WHERE idviatico = $this->intViaticoid ";
-			$arrData = array(
-				$this->intEstado,
-				$this->strComentarios
-			);
-			$request = $this->update($sql, $arrData);
+		// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
+		// $request = $this->select_all($sql);
 
-		return $request;
+		// if(empty($request))
+		// {
+		$query_insert  = "INSERT INTO comprobantes_viaticos_generales(conceptoid,viaticoid,rutaxml,rutapdf,fecha,comentarios,uuid,rfcemisor,subtotal,total,fechafactura) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+		$arrData = array(
+			$this->intConcepto,
+			$this->intConceptoid,
+			$this->strRutaxml,
+			$this->stRrutapdf,
+			$this->strFecha_salida,
+			$this->strComentarios,
+			$this->strUuid,
+			$this->strRfcemisor,
+			$this->strSubtotal,
+			$this->strTotal,
+			$this->strFechafactura
+		);
+		$request_insert = $this->insert($query_insert, $arrData);
+		$return = $request_insert;
+		// }else{
+		// 	$return = "exist";
+		// }
+		return $return;
 	}
+	
 
 
-	public function deleteCategoria(int $idcategoria)
-	{
-		$this->intIdcategoria = $idcategoria;
-		$sql = "SELECT * FROM producto WHERE categoriaid = $this->intIdcategoria";
-		$request = $this->select_all($sql);
-		if (empty($request)) {
-			$sql = "UPDATE categoria SET status = ? WHERE idcategoria = $this->intIdcategoria ";
-			$arrData = array(0);
-			$request = $this->update($sql, $arrData);
-			if ($request) {
-				$request = 'ok';
-			} else {
-				$request = 'error';
-			}
-		} else {
-			$request = 'exist';
-		}
-		return $request;
-	}
 
-	public function getCategoriasFooter()
-	{
-		$sql = "SELECT idcategoria, nombre, descripcion, portada, ruta
-					FROM categoria WHERE  status = 1 AND idcategoria IN (" . CAT_FOOTER . ")";
-		$request = $this->select_all($sql);
-		if (count($request) > 0) {
-			for ($c = 0; $c < count($request); $c++) {
-				$request[$c]['portada'] = BASE_URL . '/Assets/images/uploads/' . $request[$c]['portada'];
-			}
-		}
-		return $request;
-	}
+
+
+
+
 }

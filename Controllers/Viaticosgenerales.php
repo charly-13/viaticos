@@ -161,7 +161,7 @@ class Viaticosgenerales extends Controllers
 
 			// ✅ Ahora haces la validación usando la variable **numérica**
 			if ((int)$estadoViaticoNum === 10) {
-				$arrData[$i]['options'] = '<div class="text-center">'.$btnView.' ' . $btnComprobante . '</div>';
+				$arrData[$i]['options'] = '<div class="text-center">' . $btnView . ' ' . $btnComprobante . '</div>';
 			} else {
 				$arrData[$i]['options'] = '<div class="text-center">' . $btnView . '</div>';
 			}
@@ -196,7 +196,7 @@ class Viaticosgenerales extends Controllers
 		$this->views->getView($this, "solicitud", $data);
 	}
 
-		public function comprobantes($idviatico)
+	public function comprobantes($idviatico)
 	{
 		if (!is_numeric($idviatico)) {
 			header("Location:" . base_url() . '/viaticosgenerales');
@@ -441,5 +441,173 @@ class Viaticosgenerales extends Controllers
 			echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
 		}
 		die();
+	}
+
+
+
+	public function procesarXML()
+	{
+		header('Content-Type: application/json');
+
+		if ($_FILES['archivoXML']['error'] !== UPLOAD_ERR_OK) {
+			echo json_encode(['status' => false, 'message' => 'Error al subir el archivo XML.']);
+			return;
+		}
+
+		$contenido = file_get_contents($_FILES['archivoXML']['tmp_name']);
+		$xml = simplexml_load_string($contenido);
+
+		if (!$xml) {
+			echo json_encode(['status' => false, 'message' => 'Error al leer el archivo XML.']);
+			return;
+		}
+
+		$namespaces = $xml->getNamespaces(true);
+
+		if (isset($namespaces['cfdi'])) {
+			$xml->registerXPathNamespace('cfdi', $namespaces['cfdi']);
+		}
+		if (isset($namespaces['tfd'])) {
+			$xml->registerXPathNamespace('tfd', $namespaces['tfd']);
+		}
+
+		$comprobante = $xml->xpath('//cfdi:Comprobante')[0] ?? null;
+		$emisor = $xml->xpath('//cfdi:Emisor')[0] ?? null;
+		$receptor = $xml->xpath('//cfdi:Receptor')[0] ?? null;
+		$timbre = $xml->xpath('//cfdi:Complemento/tfd:TimbreFiscalDigital')[0] ?? null;
+
+		if (!$comprobante || !$emisor || !$receptor) {
+			echo json_encode(['status' => false, 'message' => 'No se pudo obtener toda la información del comprobante.']);
+			return;
+		}
+
+		$subtotal = (string) $comprobante['SubTotal'];
+		$total = (string) $comprobante['Total'];
+		$fecha = (string) $comprobante['Fecha'];            // 📅 Fecha de emisión
+		$rfcEmisor = (string) $emisor['Rfc'];               // RFC del emisor
+		$rfcReceptor = (string) $receptor['Rfc'];           // RFC del receptor
+		$uuid = $timbre ? (string) $timbre['UUID'] : '';    // UUID
+
+		echo json_encode([
+			'status' => true,
+			'subtotal' => $subtotal,
+			'total' => $total,
+			'fecha' => $fecha,
+			'rfcEmisor' => $rfcEmisor,
+			'rfcReceptor' => $rfcReceptor,
+			'uuid' => $uuid
+		]);
+	}
+
+
+	public function guardarComprobantes()
+	{
+		dep($_POST);
+	}
+
+
+	public function guardarComprobantess()
+	{
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$concepto = $_POST['concepto'] ?? '';
+			$comprobantes = $_POST['comprobantes'] ?? [];
+			$archivos = $_FILES;
+
+			$respuesta = ['status' => false, 'message' => 'Error desconocido', 'debug' => []];
+
+			if (!empty($concepto) && !empty($archivos['comprobantes']['name'])) {
+				$numComprobantes = count($archivos['comprobantes']['name']);
+				$respuesta['debug'][] = "Número de comprobantes recibidos: $numComprobantes";
+
+				for ($i = 0; $i < $numComprobantes; $i++) {
+					$fecha = $_POST['comprobantes'][$i]['fecha'] ?? null;
+					$comentario = $_POST['comprobantes'][$i]['comentario'] ?? '';
+
+
+					    $uuid = $_POST['comprobantes'][$i]['uuid'] ?? '';
+                $rfcEmisor = $_POST['comprobantes'][$i]['rfcEmisor'] ?? '';
+                $rfcReceptor = $_POST['comprobantes'][$i]['rfcReceptor'] ?? '';
+                $subtotal = $_POST['comprobantes'][$i]['subtotal'] ?? '';
+                $total = $_POST['comprobantes'][$i]['total'] ?? '';
+                $fechaFactura = $_POST['comprobantes'][$i]['fechaFactura'] ?? '';
+
+				$fechaFacturaFormateada = date('Y-m-d H:i:s', strtotime($fechaFactura ));
+
+
+					$xmlFileName = $archivos['comprobantes']['name'][$i]['xml'] ?? null;
+					$xmlTmpName = $archivos['comprobantes']['tmp_name'][$i]['xml'] ?? null;
+
+					$pdfFileName = $archivos['comprobantes']['name'][$i]['pdf'] ?? null;
+					$pdfTmpName = $archivos['comprobantes']['tmp_name'][$i]['pdf'] ?? null;
+
+					
+
+					$codigoAleatorio = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);
+					$fechaHora = date('Ymd_His');
+
+					// Obtener extensión del archivo XML y PDF
+					$extensionXML = pathinfo($xmlFileName, PATHINFO_EXTENSION);
+					//$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
+
+					// Construir el nuevo nombre SIN el nombre original
+					$nombreArchivoXML = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionXML;
+					//$nombreArchivoPDF = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
+
+
+
+
+					$rutaXML = null;
+
+					if ($xmlTmpName && is_uploaded_file($xmlTmpName)) {
+						$rutaXML = 'Assets/uploads/xml/' . $nombreArchivoXML;
+						if (!move_uploaded_file($xmlTmpName, $rutaXML)) {
+							$respuesta['message'] = "Error al mover el archivo XML para comprobante $i";
+							echo json_encode($respuesta);
+							exit;
+						}
+					} else {
+						$respuesta['message'] = "Falta o no es válido el archivo XML para comprobante $i";
+						echo json_encode($respuesta);
+						exit;
+					}
+
+					$rutaPDF = '';
+					if ($pdfTmpName && is_uploaded_file($pdfTmpName)) {
+						//$rutaPDF = 'Assets/uploads/pdf/' . uniqid() . '_' . basename($pdfFileName);
+						$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
+					$nombreArchivoPDF = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
+					$rutaPDF =  $nombreArchivoPDF;
+						if (!move_uploaded_file($pdfTmpName, $rutaPDF)) {
+							$respuesta['message'] = "Error al mover el archivo PDF para comprobante $i";
+							echo json_encode($respuesta);
+							exit;
+						}
+					}
+
+					// Guardar en la base de datos:
+					try {
+						$insertId = $this->model->inserComprobantesViaticos($concepto, $concepto, $nombreArchivoXML, $rutaPDF, $fecha, $comentario, $uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada);
+
+						if ($insertId) {
+							$respuesta['debug'][] = "Comprobante $i guardado en BD con ID $insertId";
+						} else {
+							$respuesta['message'] = "Error al guardar comprobante $i en BD";
+							echo json_encode($respuesta);
+							exit;
+						}
+					} catch (Exception $e) {
+						$respuesta['message'] = "Error al guardar comprobante $i en BD: " . $e->getMessage();
+						echo json_encode($respuesta);
+						exit;
+					}
+				}
+
+				echo json_encode(['status' => true, 'msg' => 'Datos guardados correctamente.']);
+			} else {
+				$respuesta['message'] = "Datos incompletos o no se enviaron archivos";
+				echo json_encode($respuesta);
+				exit;
+			}
+		}
 	}
 }

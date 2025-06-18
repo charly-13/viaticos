@@ -1,5 +1,5 @@
 <?php headerAdmin($data);
-getModal('modalAddCpmprobantes', $data);
+getModal('modalAddComprobantes', $data);
 getModal('modalValidacionJefaturaSuperior', $data);
 getModal('modalValidacionCompras', $data);
 ?>
@@ -22,7 +22,8 @@ getModal('modalValidacionCompras', $data);
         <?php } else {
           $usuarioSolicita = $data['arrSolicitud']['viaticos'];
           $detalle = $data['arrSolicitud']['detalle'];
-            $usuarioSolicita = $data['arrSolicitud']['viaticos'];
+//$usuarioSolicita = $data['arrSolicitud']['viaticos'];
+// dep($usuarioSolicita);
         ?>
           <section id="sPedido" class="invoice">
             <div class="row mb-4 align-items-center">
@@ -64,7 +65,7 @@ getModal('modalValidacionCompras', $data);
                         <td class="text-center">
 
                           <!-- Botón Agregar Comprobante --> 
-                          <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idVIATICO'] ?>,<?= $concepto['idconcepto'] ?><?= $concepto['dias'] ?>, '<?= $usuarioSolicita['fecha_salida'] ?>')">
+                          <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idconcepto'] ?>,<?= $usuarioSolicita['idviatico'] ?>,<?= $concepto['dias'] ?>, '<?= $usuarioSolicita['fecha_salida'] ?>')">
                             <i class="fas fa-plus-circle"></i> Agregar
                           </button>
 

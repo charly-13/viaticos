@@ -34,9 +34,17 @@
                 <li><a class="treeview-item" href="<?= base_url(); ?>/viaticosgenerales"><i class="icon fa fa-circle-o"></i> Viáticos Generales</a></li>
                
               
-                <li><a class="treeview-item" href="<?= base_url(); ?>/categorias"><i class="icon fa fa-circle-o"></i> Vuelos y Hoteles</a></li>
+                <li><a class="treeview-item" href="<?= base_url(); ?>/"><i class="icon fa fa-circle-o"></i> Vuelos y Hoteles</a></li>
                
             </ul>
+        </li>
+
+
+                <li>
+            <a class="app-menu__item" href="<?= base_url(); ?>/comprobantesgenerales">
+                <i class="app-menu__icon fas fa-chart-pie" aria-hidden="true"></i>
+                <span class="app-menu__label">Comprobantes Generales</span>
+            </a>
         </li>
    
         <li>

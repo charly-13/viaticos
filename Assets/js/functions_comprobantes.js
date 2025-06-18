@@ -1,8 +1,9 @@
   
 
-function modalAgregarComprobantes(idconcepto, numDias, fechaInicial = null) {
+function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial = null) {
   console.log(rfcEmpresa);
   conceptoActual = idconcepto;
+    viaticoActual = idviatico;
   document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes - ${idconcepto}`;
   const contenedor = document.getElementById('contenedorDias');
   contenedor.innerHTML = '';
@@ -53,6 +54,7 @@ function modalAgregarComprobantes(idconcepto, numDias, fechaInicial = null) {
   }
 
   document.querySelector('#idconcepto').value = idconcepto;
+    document.querySelector('#idviatico').value = idviatico;
   $('#modalFormAddComprobantes').modal('show');
 }
 
@@ -128,6 +130,7 @@ function guardarComprobantes() {
 
   // Se agrega el concepto actual (puede ser idconcepto)
   comprobantesData.append('concepto', conceptoActual);
+    comprobantesData.append('viatico', viaticoActual);
 
   // Recorrer cada div de día
   const dias = contenedor.querySelectorAll('.bg-section');

@@ -155,7 +155,7 @@ class Viaticosgenerales extends Controllers
 
 
 			// Botones
-			$btnView = '<a title="Ver Detalle" href="' . base_url() . '/viaticosgenerales/solicitud/' . $arrData[$i]['idviatico'] . '" target="_blank" class="btn btn-info btn-sm"> <i class="far fa-eye"></i> </a>';
+			$btnView = '<a title="Ver Detalle" href="' . base_url() . '/viaticosgenerales/solicitud/' . $arrData[$i]['idviatico'] . '"  class="btn btn-info btn-sm"> <i class="far fa-eye"></i> </a>';
 
 			$btnComprobante = '<a title="Comprobantes" href="' . base_url() . '/viaticosgenerales/comprobantes/' . $arrData[$i]['idviatico'] . '"  class="btn btn-danger btn-sm"> <i class="fas fa-file-pdf"></i> </a>';
 
@@ -510,6 +510,7 @@ class Viaticosgenerales extends Controllers
 	{
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$concepto = $_POST['concepto'] ?? '';
+				$viatico = $_POST['viatico'] ?? '';
 			$comprobantes = $_POST['comprobantes'] ?? [];
 			$archivos = $_FILES;
 
@@ -572,11 +573,13 @@ class Viaticosgenerales extends Controllers
 					}
 
 					$rutaPDF = '';
+					$nombreArchivoPDF='';
 					if ($pdfTmpName && is_uploaded_file($pdfTmpName)) {
 						//$rutaPDF = 'Assets/uploads/pdf/' . uniqid() . '_' . basename($pdfFileName);
 						$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
+					$rutaPDF = 'Assets/uploads/pdf/' . $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
 					$nombreArchivoPDF = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
-					$rutaPDF =  $nombreArchivoPDF;
+					//$nombreArchivoPDF =  $nombreArchivoPDF;
 						if (!move_uploaded_file($pdfTmpName, $rutaPDF)) {
 							$respuesta['message'] = "Error al mover el archivo PDF para comprobante $i";
 							echo json_encode($respuesta);
@@ -586,7 +589,7 @@ class Viaticosgenerales extends Controllers
 
 					// Guardar en la base de datos:
 					try {
-						$insertId = $this->model->inserComprobantesViaticos($concepto, $concepto, $nombreArchivoXML, $rutaPDF, $fecha, $comentario, $uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada);
+						$insertId = $this->model->inserComprobantesViaticos($concepto, $viatico, $nombreArchivoXML, $nombreArchivoPDF, $fecha, $comentario, $uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada);
 
 						if ($insertId) {
 							$respuesta['debug'][] = "Comprobante $i guardado en BD con ID $insertId";

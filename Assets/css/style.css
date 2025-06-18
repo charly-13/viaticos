@@ -494,3 +494,262 @@
     padding: 0.5rem;
     border-radius: 0.375rem;
   }
+
+
+
+  .btn-comprobantes {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  font-size: -0.1rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #2563eb; /* Azul profesional */
+  border: 1px solid #1d4ed8;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-comprobantes i {
+  font-size: 1rem;
+}
+
+.btn-comprobantes:hover {
+  background-color: #1d4ed8; /* Más oscuro al pasar el mouse */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-comprobantes:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+
+
+
+
+  .concept-section {
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    padding: 20px;
+  }
+  .concept-header {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #d16032;
+    border-bottom: 2px solid #d16032;
+    margin-bottom: 15px;
+  }
+  .concept-content {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+  .day-title {
+    font-weight: bold;
+    color: #444;
+    margin-top: 15px;
+    margin-bottom: 8px;
+  }
+  .comprobante-item {
+    background: #f5f5f500;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .comprobante-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .info-left {
+    flex: 1;
+  }
+  .info-left strong {
+    color: #d16032;
+  }
+  .comentarios {
+    font-style: italic;
+    color: #666;
+    margin-top: 4px;
+  }
+  .comprobante-status {
+    margin-top: 8px;
+    font-weight: bold;
+    font-size: 0.9em;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .aprobado { background-color: #d4edda; color: #155724; }
+  .rechazado { background-color: #f8d7da; color: #721c24; }
+  .pendiente { background-color: #fff3cd; color: #856404; }
+
+  .status-comment {
+    margin-top: 4px;
+    font-size: 0.85em;
+    color: #555;
+    font-style: italic;
+  }
+  .document-links {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .doc-button {
+    background-color: #d16032;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    border: none;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+  }
+  .doc-button:hover { background-color: #b84e20; }
+
+  .action-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .comment-area {
+    width: 100%;
+    min-height: 60px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-size: 0.9em;
+  }
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  .action-btn {
+    border: none;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85em;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .approve-btn { background-color: #28a745; color: white; }
+  .reject-btn { background-color: #dc3545; color: white; }
+  .approve-btn:hover { background-color: #218838; }
+  .reject-btn:hover { background-color: #c82333; }
+
+  .concept-total-container {
+    margin-top: 15px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #d16032;
+  }
+
+
+    /* Elimina scroll interno si existe en los bloques */
+  .concept-content,
+  .comprobante-item,
+  .factura-datos {
+    overflow: visible !important;  /* ⚠️ Elimina scroll interno */
+    max-height: none !important;   /* ⚠️ Evita limitaciones de altura que generen scroll */
+  }
+
+  body, html, .app-content {
+    overflow-x: hidden; /* Evita scroll horizontal */
+  }
+
+
+
+  
+  .card-concepto {
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .card-concepto-header {
+    background-color: #212529;
+    color: #fff;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .card-concepto-body {
+   /* max-height: 400px;  Ajustable según tu gusto */
+    overflow-y: auto;
+    padding: 15px;
+  }
+
+  .comprobante-box {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+
+  .document-links a,
+  .document-links button {
+    margin-right: 6px;
+    margin-bottom: 6px;
+  }
+
+  .factura-datos {
+    font-size: 13px;
+  }
+
+  .action-section {
+    margin-top: 10px;
+  }
+
+  .action-section button {
+    min-width: 110px;
+  }
+
+  .btn-aprobar {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .btn-rechazar {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .btn-aprobar:hover {
+    background-color: #218838;
+  }
+
+  .btn-rechazar:hover {
+    background-color: #c82333;
+  }
+
+  /* Scroll personalizado */
+  /* .card-concepto-body::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .card-concepto-body::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  } */

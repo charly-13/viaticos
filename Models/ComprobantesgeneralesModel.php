@@ -1,6 +1,6 @@
 <?php
 
-class ViaticosgeneralesModel extends Mysql
+class ComprobantesgeneralesModel extends Mysql
 {
 	public $intIdcategoria;
 	public $strCategoria;
@@ -33,6 +33,8 @@ class ViaticosgeneralesModel extends Mysql
 	public $strRfcemisor;
 	public $strSubtotal;
 	public $strFechafactura;
+	public $intIdComprobante;
+	public $strComentario;
 
 	public function __construct()
 	{
@@ -151,6 +153,34 @@ class ViaticosgeneralesModel extends Mysql
 	}
 
 
+    	public function selectViaticosAll()
+	{
+		
+
+		$sql = "SELECT 
+            vg.idviatico,
+            vg.codigo_solicitud,
+			 vg.usuarioid,
+            vg.nombreusuario,
+			vg.fecha_salida,
+			vg.fecha_regreso,
+			vg.motivo,
+			vg.lugar_destino,
+			vg.fechacreacion,
+			vg.estado  AS estado_viatico,
+            vg.actualizado_por AS actualizado_por_viatico,
+			vg.fechaactualizacion,
+			vg.total,
+            cc.estado AS estado_centro,
+			cc.nombre AS nombre_centro
+        FROM viaticos_generales vg
+        LEFT JOIN centros_costo cc ON vg.centrocostoid = cc.idcentro
+        WHERE  vg.estado = 10";
+		$request = $this->select_all($sql);
+		return $request;
+	}
+
+
 
 	public function selectViaticos(int $id_usuario)
 	{
@@ -174,7 +204,7 @@ class ViaticosgeneralesModel extends Mysql
 			cc.nombre AS nombre_centro
         FROM viaticos_generales vg
         LEFT JOIN centros_costo cc ON vg.centrocostoid = cc.idcentro
-        WHERE vg.estado != 0 AND  vg.usuarioid = $this->intUsuarioid";
+        WHERE vg.estado == '10' AND  vg.usuarioid = $this->intUsuarioid";
 		$request = $this->select_all($sql);
 		return $request;
 	}
@@ -188,61 +218,47 @@ class ViaticosgeneralesModel extends Mysql
 		return $request;
 	}
 
-	public function selectSolicitud(int $viaticoid)
-	{
-		//$this->intIdcategoria = $idcategoria;
-		$this->intViaticoid = $viaticoid;
-		$sql = "SELECT vg.idviatico,
-            vg.codigo_solicitud,
-            vg.nombreusuario,
-			vg.fecha_salida,
-			vg.fecha_regreso,
-			vg.motivo,
-			vg.lugar_destino,
-			vg.fechacreacion,
-			vg.estado  AS estado_viatico,
-            vg.actualizado_por AS actualizado_por_viatico,
-			vg.fechaactualizacion,
-			vg.total,
-			vg.descripcion,
-			vg.usuarioid,
-			vg.comentariosjefatura,
-			vg.fechajefatura,
-			vg.comentariosjefaturasup,
-			vg.fechajefaturasup,
-            u.id_colaborador,
-            c.id_colaborador,
-			c.nombre_1,
-			c.apellido_paterno,
-			c.apellido_materno,
-			c.telefono_personal,
-			c.email_corporativo
-			FROM viaticos_generales as vg
-			INNER JOIN usuarios AS u 
-			ON vg.usuarioid = u.id_usuario
-			INNER JOIN colaboradores as c
-			ON u.id_colaborador = c.id_colaborador
-					WHERE vg.idviatico = $this->intViaticoid";
-		$requestViaticos = $this->select($sql);
+public function selectSolicitudComprobante(int $viaticoid)
+{
+	$this->intViaticoid = $viaticoid;
 
-		$sql_detalle = "SELECT vc.idconcepto,
-						                    vc.viaticoid,
-											vc.concepto,
-											vc.solicituddiaria,
-											vc.subtotal,
-											vc.comentario,
-											vc.dias
-									FROM viaticos_conceptos vc
-									WHERE vc.viaticoid = $viaticoid";
-		$requestProductos = $this->select_all($sql_detalle);
+	$sql = "SELECT 
+				cvg.idcomprobante,
+				cvg.conceptoid,
+				cvg.viaticoid,
+				cvg.rutaxml,
+				cvg.rutapdf,
+				cvg.fecha,
+				cvg.comentarios,
+				cvg.uuid,
+				cvg.rfcemisor,
+				cvg.subtotal AS subtotal_comprobante,
+				cvg.total,
+				cvg.fechafactura,
+				cvg.estado_documento,
+				cvg.comentario_compras,
+				vc.idconcepto,
+				vc.concepto,
+				vc.solicituddiaria,
+				vc.subtotal AS subtotal_concepto,
+				vc.comentario AS comentario_concepto,
+				vc.dias,
+				vg.idviatico,
+				vg.codigo_solicitud
+			FROM comprobantes_viaticos_generales AS cvg
+			INNER JOIN viaticos_conceptos AS vc
+				ON cvg.conceptoid = vc.idconcepto
+			INNER JOIN viaticos_generales AS vg
+				ON cvg.viaticoid = vg.idviatico
+			WHERE cvg.viaticoid = $this->intViaticoid";
 
-		$request = array(
-			'viaticos' => $requestViaticos,
-			'detalle' => $requestProductos
-		);
+	$requestComprobantes = $this->select_all($sql);
 
-		return $request;
-	}
+	return array(
+		'viaticosComprobantes' => $requestComprobantes
+	);
+}
+
 
 	public function gestionJefatura(int $dviatico , int $estado, string $comentariosjefatura)
 	{
@@ -345,7 +361,30 @@ class ViaticosgeneralesModel extends Mysql
 		// }
 		return $return;
 	}
+
 	
+	
+	public function evaluarComprobante(int $idcomprobante, int $estado_documento, string $comentario_compras)
+	{
+
+	
+		$this->intIdComprobante = $idcomprobante;
+		$this->intEstado = $estado_documento;
+		$this->strComentario = $comentario_compras;
+		
+			$sql = "UPDATE comprobantes_viaticos_generales SET estado_documento = ?, comentario_compras = ?, fecha_evaluacion = NOW()  WHERE idcomprobante  = $this->intIdComprobante ";
+			$arrData = array($this->intEstado, 
+								 $this->strComentario);
+			$request = $this->update($sql, $arrData);
+			if ($request) {
+				$request = 'ok';
+			} else {
+				$request = 'error';
+			}
+
+		return $request;
+	}
+
 
 
 

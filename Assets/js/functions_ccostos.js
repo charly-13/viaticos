@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
         "columns": [
             { "data": "nombre_centro" },
             { "data": "nombre_area" },
-            { "data": "responsable" },
+            // { "data": "responsable" },
                    { 
           "data": "presupuestomensual",
           "render": function(data, type, row) {
@@ -106,10 +106,10 @@ document.addEventListener('DOMContentLoaded', function () {
         let intEmpresa = document.querySelector('#listEmpresa').value;
         let intDirteccion = document.querySelector('#listDireccion').value;
         let intArea = document.querySelector('#listArea').value;
-        let strResponsable = document.querySelector('#txtResponsable').value;
+        // let strResponsable = document.querySelector('#txtResponsable').value;
         let strPresupuestoAnual = document.querySelector('#txtPresupuestoAnual').value;
         let strPresupuestoMnesual = document.querySelector('#txtPresupuestoMensual').value;
-        if (intEmpresa == '0' || intDirteccion == '0' || intArea == '0' || strNombre == '' || strResponsable == '' || strPresupuestoAnual == '' || strPresupuestoMnesual == '') {
+        if (intEmpresa == '0' || intDirteccion == '0' || intArea == '0' || strNombre == ''  || strPresupuestoAnual == '' || strPresupuestoMnesual == '') {
             swal("Atención", "Todos los campos con (*) son obligatorios.", "error");
             return false;
         }
@@ -210,7 +210,7 @@ function fntViewInfo(idcentro) {
                 document.querySelector("#celEmpresa").innerHTML = objData.data.nombre_empresa;
                 document.querySelector("#celDireccion").innerHTML = objData.data.nombre_direccion;
                 document.querySelector("#celArea").innerHTML = objData.data.nombre_area;
-                document.querySelector("#celResponsable").innerHTML = objData.data.responsable;
+                // document.querySelector("#celResponsable").innerHTML = objData.data.responsable;
                 document.querySelector("#celPresupuestoanual").innerHTML = objData.data.presupuestoanual;
                 document.querySelector("#celPresupuestomensual").innerHTML = objData.data.presupuestomensual;
                 document.querySelector("#celFechacreacion").innerHTML = objData.data.fechacreacion;
@@ -244,7 +244,7 @@ function fntEditInfo(element, idcentro) {
                 // document.querySelector("#listEmpresa").value = objData.data.idempresa;
                 //  document.querySelector("#listDireccion").value = objData.data.iddireccion;
                 //   document.querySelector("#listArea").value = objData.data.idarea;
-                document.querySelector("#txtResponsable").value = objData.data.responsable;
+                // document.querySelector("#txtResponsable").value = objData.data.responsable;
                 document.querySelector("#fechacreacion").value = objData.data.fechacreacion;
                 document.querySelector("#listStatus").value = objData.data.estado;
 

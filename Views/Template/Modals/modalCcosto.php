@@ -21,10 +21,10 @@
                 <label class="control-label">Nombre<span class="required">*</span></label>
                 <input class="form-control" id="txtNombre" name="txtNombre" type="text" required="" placeholder="ej. Ventas CDMX" autocomplete="off">
               </div>
-              <div class="form-group">
+              <!-- <div class="form-group" style="display: none;">
                 <label class="control-label">Responsable del Centro<span class="required">*</span></label>
-                <input class="form-control" id="txtResponsable" name="txtResponsable" type="text" required="" autocomplete="off">
-              </div>
+                <input class="form-control" id="txtResponsable" value="" name="txtResponsable" type="text" required="" autocomplete="off">
+              </div> -->
 
               <div class="row">
                 <div class="form-group col-md-6">
@@ -125,10 +125,10 @@
               <td>Área asignada:</td>
               <td id="celArea"></td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td>Responsable:</td>
               <td id="celResponsable"></td>
-            </tr>
+            </tr> -->
             <tr>
               <td>Presupuesto Mensual:</td>
               <td id="celPresupuestoanual"></td>

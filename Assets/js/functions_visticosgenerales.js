@@ -489,8 +489,8 @@ function fntCentrosCosto(session_id_area) {
 let conceptos = [
     { concepto: "Alimentación", solicituddiaria: "500.00", subTotal: "$0.00", comentario: "" },
     { concepto: "Transporte Local", solicituddiaria: "", subTotal: "$0.00", comentario: "" },
-    { concepto: "Estacionamiento", solicituddiaria: "", subTotal: "$0.00", comentario: "" },
-    { concepto: "Otros (Especificar)", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
+    { concepto: "Estacionamiento", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
+    // { concepto: "Otros (Especificar)", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
 ];
 
 

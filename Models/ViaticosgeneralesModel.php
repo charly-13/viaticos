@@ -244,6 +244,78 @@ class ViaticosgeneralesModel extends Mysql
 		return $request;
 	}
 
+
+		public function selectSolicitudComprobante(int $viaticoid)
+	{
+		//$this->intIdcategoria = $idcategoria;
+		$this->intViaticoid = $viaticoid;
+		$sql = "SELECT vg.idviatico,
+            vg.codigo_solicitud,
+            vg.nombreusuario,
+			vg.fecha_salida,
+			vg.fecha_regreso,
+			vg.motivo,
+			vg.lugar_destino,
+			vg.fechacreacion,
+			vg.estado  AS estado_viatico,
+            vg.actualizado_por AS actualizado_por_viatico,
+			vg.fechaactualizacion,
+			vg.total,
+			vg.descripcion,
+			vg.usuarioid,
+			vg.comentariosjefatura,
+			vg.fechajefatura,
+            u.id_colaborador,
+            c.id_colaborador,
+			c.nombre_1,
+			c.apellido_paterno,
+			c.apellido_materno,
+			c.telefono_personal,
+			c.email_corporativo
+			FROM viaticos_generales as vg
+			INNER JOIN usuarios AS u 
+			ON vg.usuarioid = u.id_usuario
+			INNER JOIN colaboradores as c
+			ON u.id_colaborador = c.id_colaborador
+					WHERE vg.idviatico = $this->intViaticoid;
+";
+		$requestViaticos = $this->select($sql);
+
+		$sql_detalle = "SELECT vc.idconcepto,
+						                    vc.viaticoid,
+											vc.concepto,
+											vc.solicituddiaria,
+											vc.subtotal,
+											vc.comentario,
+											vc.dias,
+											vc.tiene_comprobante
+									FROM viaticos_conceptos vc
+									WHERE vc.viaticoid = $viaticoid";
+		$requestProductos = $this->select_all($sql_detalle);
+
+		$request = array(
+			'viaticos' => $requestViaticos,
+			'detalle' => $requestProductos
+		);
+
+		return $request;
+	}
+
+	
+
+		public function updateConceptoComprobante(int $idconcepto)
+	{
+		$this->intConceptoid = $idconcepto ;
+	
+
+
+			$sql = "UPDATE viaticos_conceptos SET tiene_comprobante	 = ? WHERE idconcepto = $this->intConceptoid ";
+			$arrData = array(2);
+			$request = $this->update($sql, $arrData);
+
+		return $request;
+	}
+
 	public function gestionJefatura(int $dviatico , int $estado, string $comentariosjefatura)
 	{
 		$this->intViaticoid = $dviatico ;
@@ -345,6 +417,37 @@ class ViaticosgeneralesModel extends Mysql
 		// }
 		return $return;
 	}
+
+		public function insertTotalesFactura(int $concepto, int $viaticoid, string $total)
+	{
+
+		$return = 0;
+		$this->intConcepto = $concepto;
+		$this->intViaticoid = $viaticoid;
+		$this->strTotal = $total;
+
+
+
+		// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
+		// $request = $this->select_all($sql);
+
+		// if(empty($request))
+		// {
+		$query_insert  = "INSERT INTO totales_vgfacturas_conceptos(conceptoid,viaticoid,total,fecha_subida) VALUES(?,?,?, NOW())";
+		$arrData = array(
+			$this->intConcepto,
+			$this->intViaticoid,
+	        $this->strTotal,
+		);
+		$request_insert = $this->insert($query_insert, $arrData);
+		$return = $request_insert;
+		// }else{
+		// 	$return = "exist";
+		// }
+		return $return;
+	}
+	
+
 	
 
 

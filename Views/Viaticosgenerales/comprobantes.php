@@ -1,7 +1,7 @@
 <?php headerAdmin($data);
 getModal('modalAddComprobantes', $data);
-getModal('modalValidacionJefaturaSuperior', $data);
-getModal('modalValidacionCompras', $data);
+// getModal('modalValidacionJefaturaSuperior', $data);
+// getModal('modalValidacionCompras', $data);
 ?>
 <main class="app-content">
   <div class="app-title">
@@ -22,10 +22,10 @@ getModal('modalValidacionCompras', $data);
         <?php } else {
           $usuarioSolicita = $data['arrSolicitud']['viaticos'];
           $detalle = $data['arrSolicitud']['detalle'];
-//$usuarioSolicita = $data['arrSolicitud']['viaticos'];
-// dep($usuarioSolicita);
+          //$usuarioSolicita = $data['arrSolici tud']['viaticos'];
+          //  dep($usuarioSolicita);
         ?>
-          <section id="sPedido" class="invoice">
+          <section id="sPedido" class="invoice"> 
             <div class="row mb-4 align-items-center">
               <div class="col-6">
                 <h2 class="page-header"><img src="<?= media(); ?>/images/ldr.png" style="height: 100px;"></h2>
@@ -64,21 +64,28 @@ getModal('modalValidacionCompras', $data);
                         <td class="text-right"><?= formatMoney($concepto['subtotal']) ?></td>
                         <td class="text-center">
 
-                          <!-- Botón Agregar Comprobante --> 
+                        <?php if ($concepto['tiene_comprobante']=="1") {   ?>
+
+                          <!-- Botón Agregar Comprobante -->
                           <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idconcepto'] ?>,<?= $usuarioSolicita['idviatico'] ?>,<?= $concepto['dias'] ?>, '<?= $usuarioSolicita['fecha_salida'] ?>')">
                             <i class="fas fa-plus-circle"></i> Agregar
                           </button>
-
+                            <?php 
+                  } ?>
+<?php if ($concepto['tiene_comprobante']=="2") {   ?>
                           <!-- Botón Ver Comprobantes -->
-                          <button class="btn btn-info btn-sm" title="Ver Comprobantes">
+                          <a href="<?= base_url(); ?>/comprobantesgenerales/solicitud/<?= $usuarioSolicita['idviatico'] ?>" class="btn btn-info btn-sm" title="Ver Comprobantes">
                             <i class="fas fa-eye"></i> Ver
-                          </button>
+                          </a>
+ <?php 
+                  } ?>
+                          
 
                         </td>
                       </tr>
                   <?php }
                   } ?>
-                </tbody> 
+                </tbody>
                 <tfoot>
                   <tr>
                     <th colspan="4" class="text-right">TOTAL:</th>

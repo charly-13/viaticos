@@ -27,7 +27,7 @@
                         <tr>
                           <th>Nombre</th>
                           <th>Área</th>
-                          <th>Responsable</th>
+                          <!-- <th>Responsable</th> -->
                           <th>Presup. Mensual</th>
                           <th>Presup. Anual</th>
                           <th>F. Registro</th>

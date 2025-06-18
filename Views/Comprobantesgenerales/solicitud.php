@@ -2,6 +2,10 @@
 getModal('modalValidacionuno', $data);
 getModal('modalValidacionJefaturaSuperior', $data);
 getModal('modalValidacionCompras', $data);
+
+//     echo '<pre>';
+// print_r($_SESSION['userData']);
+// echo '</pre>';
 ?>
 <main class="app-content">
   <div class="app-title">
@@ -14,7 +18,7 @@ getModal('modalValidacionCompras', $data);
     </ul>
   </div>
 
-  <div class="row">
+  <div class="row"> 
     <div class="col-md-12">
       <div class="tile shadow rounded-3 p-4">
 
@@ -106,7 +110,7 @@ getModal('modalValidacionCompras', $data);
                       <div><strong>Fecha factura:</strong> <?= $comprobante['fechafactura'] ?? 'N/A' ?></div>
                     </div>
 
-
+<?php  if($_SESSION['userData']['id_area']=="32" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
                     <?php if (!in_array($comprobante['estado_documento'], ['2', '3'])) { ?>
                       <div class="action-section">
                         <textarea class="form-control mb-2 comment-area" placeholder="Agregar un comentario (opcional)..."></textarea>
@@ -123,6 +127,7 @@ getModal('modalValidacionCompras', $data);
                       </div>
 
                     <?php } ?>
+                     <?php } ?>
 
                   </div>
                 </div>

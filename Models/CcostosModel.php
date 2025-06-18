@@ -24,7 +24,7 @@ class CcostosModel extends Mysql
 		parent::__construct();
 	}
 
-	public function inserCentroCosto(string $nombre, int $idempresa, int $iddirecion, int $idarea, string $responsable, string $presupuestoanual, string $presupuestomensual, string $fechacreacion, int $estado, int $creado_por, int $actualizado_por)
+	public function inserCentroCosto(string $nombre, int $idempresa, int $iddirecion, int $idarea, string $presupuestoanual, string $presupuestomensual, string $fechacreacion, int $estado, int $creado_por, int $actualizado_por)
 	{
 
 		$return = 0;
@@ -33,7 +33,7 @@ class CcostosModel extends Mysql
 		$this->intDireccion = $iddirecion;
 		$this->intArea = $idarea;
 
-		$this->strResposable = $responsable;
+		// $this->strResposable = $responsable;
 		$this->strPresupuestoAnual = $presupuestoanual;
 		$this->strPresupuestoMensual = $presupuestomensual;
 		$this->strFechacreacion = $fechacreacion;
@@ -47,13 +47,13 @@ class CcostosModel extends Mysql
 		$request = $this->select_all($sql);
 
 		if (empty($request)) {
-			$query_insert = "INSERT INTO centros_costo(nombre,idempresa,iddireccion,idarea,responsable,presupuestoanual,presupuestomensual,fechacreacion,estado,creado_por,actualizado_por) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+			$query_insert = "INSERT INTO centros_costo(nombre,idempresa,iddireccion,idarea,presupuestoanual,presupuestomensual,fechacreacion,estado,creado_por,actualizado_por) VALUES(?,?,?,?,?,?,?,?,?,?)";
 			$arrData = array(
 				$this->strNombre,
 				$this->intEmpresa,
 				$this->intDireccion,
 				$this->intArea,
-				$this->strResposable,
+				// $this->strResposable,
 				$this->strPresupuestoAnual,
 				$this->strPresupuestoMensual,
 				$this->strFechacreacion,
@@ -77,7 +77,6 @@ class CcostosModel extends Mysql
     cc.idarea,
     a.nombre_area,
     a.id_direccion,
-    cc.responsable,
     cc.presupuestoanual,
     cc.presupuestomensual,
     cc.fechacreacion,
@@ -112,7 +111,6 @@ INNER JOIN
 	cc.idempresa,
 	cc.iddireccion,
     cc.idarea,
-    cc.responsable,
     cc.presupuestoanual,
     cc.presupuestomensual,
     cc.fechacreacion,
@@ -170,7 +168,6 @@ INNER JOIN colaboradores as col
 	  cc.idarea,
     a.nombre_area,
     a.id_direccion,
-    cc.responsable,
     cc.presupuestoanual,
     cc.presupuestomensual,
     cc.fechacreacion,
@@ -191,7 +188,7 @@ INNER JOIN
 
 
 
-	public function updateCentroCosto(int $idcentro, string $nombre, int $idempresa, int $iddirecion, int $idarea, string $responsable, string $presupuestoanual, string $presupuestomensual, string $fechacreacion, int $estado, int $creado_por, int $actualizado_por)
+	public function updateCentroCosto(int $idcentro, string $nombre, int $idempresa, int $iddirecion, int $idarea,  string $presupuestoanual, string $presupuestomensual, string $fechacreacion, int $estado, int $creado_por, int $actualizado_por)
 	{
 		$this->intIdccosto = $idcentro;
 
@@ -200,7 +197,7 @@ INNER JOIN
 		$this->intDireccion = $iddirecion;
 		$this->intArea = $idarea;
 
-		$this->strResposable = $responsable;
+		// $this->strResposable = $responsable;
 		$this->strPresupuestoAnual = $presupuestoanual;
 		$this->strPresupuestoMensual = $presupuestomensual;
 		$this->strFechacreacion = $fechacreacion;
@@ -209,13 +206,13 @@ INNER JOIN
 		$this->intActualizado_por = $actualizado_por;
 
 
-		$sql = "UPDATE centros_costo SET nombre = ?, idempresa = ?, iddireccion = ?, idarea = ?, responsable = ?, presupuestoanual = ?, presupuestomensual = ?, actualizado_por = ? WHERE idcentro = $this->intIdccosto ";
+		$sql = "UPDATE centros_costo SET nombre = ?, idempresa = ?, iddireccion = ?, idarea = ?, presupuestoanual = ?, presupuestomensual = ?, actualizado_por = ? WHERE idcentro = $this->intIdccosto ";
 		$arrData = array(
 			$this->strNombre,
 			$this->intEmpresa,
 			$this->intDireccion,
 			$this->intArea,
-			$this->strResposable,
+			// $this->strResposable,
 			$this->strPresupuestoAnual,
 			$this->strPresupuestoMensual,
 			$this->intActualizado_por

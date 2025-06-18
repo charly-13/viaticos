@@ -19,7 +19,7 @@
                 <i class="app-menu__icon fa fa-dashboard"></i>
                 <span class="app-menu__label">Dashboard</span>
             </a>
-        </li>
+        </li> 
     
 
 
@@ -39,6 +39,7 @@
             </ul>
         </li>
 
+        <?php  if($_SESSION['userData']['id_area']=="32" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
 
                 <li>
             <a class="app-menu__item" href="<?= base_url(); ?>/comprobantesgenerales">
@@ -46,6 +47,12 @@
                 <span class="app-menu__label">Comprobantes Generales</span>
             </a>
         </li>
+
+            <?php
+	}
+ ?>
+
+        <?php  if($_SESSION['userData']['id_area']=="32" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
    
         <li>
             <a class="app-menu__item" href="<?= base_url(); ?>/ccostos">
@@ -53,6 +60,10 @@
                 <span class="app-menu__label">Centros de Costo</span>
             </a>
         </li>
+
+        <?php
+	}
+ ?>
       
        
 

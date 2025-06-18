@@ -202,7 +202,7 @@ class Viaticosgenerales extends Controllers
 			header("Location:" . base_url() . '/viaticosgenerales');
 		}
 
-
+ 
 
 		$idpersona = $_SESSION['userData']['id_usuario'];
 		// dep($idpersona);
@@ -215,8 +215,8 @@ class Viaticosgenerales extends Controllers
 		$data['page_title'] = "COMPROBANTES <small>Viáticos</small>";
 		$data['page_name'] = "comprobantes";
 		$data['page_functions_js'] = "functions_comprobantes.js";
-		$data['arrSolicitud'] = $this->model->selectSolicitud($idviatico, $idpersona);
-		//dep($data['arrSolicitud']);
+		$data['arrSolicitud'] = $this->model->selectSolicitudComprobante($idviatico, $idpersona);
+		// dep($data['arrSolicitud']);
 		$this->views->getView($this, "comprobantes", $data);
 	}
 
@@ -508,14 +508,16 @@ class Viaticosgenerales extends Controllers
 
 	public function guardarComprobantess()
 	{
+
 		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			$concepto = $_POST['concepto'] ?? '';
 				$viatico = $_POST['viatico'] ?? '';
+				$totalFacturas = $_POST['totalGastosFactura'] ?? '';
 			$comprobantes = $_POST['comprobantes'] ?? [];
 			$archivos = $_FILES;
 
 			$respuesta = ['status' => false, 'message' => 'Error desconocido', 'debug' => []];
-
+ 
 			if (!empty($concepto) && !empty($archivos['comprobantes']['name'])) {
 				$numComprobantes = count($archivos['comprobantes']['name']);
 				$respuesta['debug'][] = "Número de comprobantes recibidos: $numComprobantes";
@@ -588,11 +590,14 @@ class Viaticosgenerales extends Controllers
 					}
 
 					// Guardar en la base de datos:
-					try {
+					try { 
 						$insertId = $this->model->inserComprobantesViaticos($concepto, $viatico, $nombreArchivoXML, $nombreArchivoPDF, $fecha, $comentario, $uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada);
 
 						if ($insertId) {
 							$respuesta['debug'][] = "Comprobante $i guardado en BD con ID $insertId";
+
+								// Nuevo insert relacionado con el comprobante guardado
+	                          
 						} else {
 							$respuesta['message'] = "Error al guardar comprobante $i en BD";
 							echo json_encode($respuesta);
@@ -605,6 +610,10 @@ class Viaticosgenerales extends Controllers
 					}
 				}
 
+				//  Este insert lo hacemos **solo una vez**, después de guardar todos los comprobantes
+	            $this->model->insertTotalesFactura($concepto, $viatico, $totalFacturas);
+
+                 $this->model->updateConceptoComprobante($concepto);
 				echo json_encode(['status' => true, 'msg' => 'Datos guardados correctamente.']);
 			} else {
 				$respuesta['message'] = "Datos incompletos o no se enviaron archivos";

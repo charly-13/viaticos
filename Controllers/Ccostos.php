@@ -30,7 +30,7 @@
 		public function setCcostos(){
          //dep($_POST);
 			if($_POST){
-				if(empty($_POST['txtNombre']) || empty($_POST['txtResponsable']) || empty($_POST['listEmpresa']) || empty($_POST['listDireccion']) || empty($_POST['listArea']) || empty($_POST['txtPresupuestoAnual']) || empty($_POST['txtPresupuestoMensual']) )
+				if(empty($_POST['txtNombre']) || empty($_POST['listEmpresa']) || empty($_POST['listDireccion']) || empty($_POST['listArea']) || empty($_POST['txtPresupuestoAnual']) || empty($_POST['txtPresupuestoMensual']) )
 				{
 					$arrResponse = array("status" => false, "msg" => 'Datos incorrectos.');
 				}else{
@@ -40,7 +40,7 @@
 					$intEmpresa = intval($_POST['listEmpresa']);
 					$intDireccion = intval($_POST['listDireccion']);
                     $intArea = intval($_POST['listArea']);
-					$strResposable = strClean($_POST['txtResponsable']);
+					// $strResposable = strClean($_POST['txtResponsable']);
                     $strPresupuestoAnual = $_POST['txtPresupuestoAnual'];
                     $strPresupuestoMensual = $_POST['txtPresupuestoMensual'];
                     $strFechacreacion = strClean($_POST['fechacreacion']);
@@ -53,12 +53,12 @@
 					if($intIdcentero == 0)
 					{
 						//Crear
-							$request_ccosto = $this->model->inserCentroCosto($strNombre, $intEmpresa, $intDireccion, $intArea, $strResposable, $strPresupuestoAnual, $strPresupuestoMensual, $strFechacreacion, $intEstado, $intCreado_por, $intActualizado_por);
+							$request_ccosto = $this->model->inserCentroCosto($strNombre, $intEmpresa, $intDireccion, $intArea, $strPresupuestoAnual, $strPresupuestoMensual, $strFechacreacion, $intEstado, $intCreado_por, $intActualizado_por);
 							$option = 1;
 						
 					}else{
 						//Actualizar
-							$request_ccosto = $this->model->updateCentroCosto($intIdcentero,$strNombre, $intEmpresa, $intDireccion, $intArea, $strResposable, $strPresupuestoAnual, $strPresupuestoMensual, $strFechacreacion, $intEstado, $intCreado_por, $intActualizado_por);
+							$request_ccosto = $this->model->updateCentroCosto($intIdcentero,$strNombre, $intEmpresa, $intDireccion, $intArea, $strPresupuestoAnual, $strPresupuestoMensual, $strFechacreacion, $intEstado, $intCreado_por, $intActualizado_por);
 							$option = 2;
 						
 					}

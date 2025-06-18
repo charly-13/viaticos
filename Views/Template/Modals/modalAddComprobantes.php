@@ -10,7 +10,7 @@
       </div>
       <div class="modal-body">
             <form  name="formViaticoAprobacionJefaturaSuperior" class="form-horizontal" enctype="multipart/form-data" method="POST">
-              <input type="text" id="totalGastosFactura" name="totalGastosFactura">
+              <input type="hidden" id="totalGastosFactura" name="totalGastosFactura">
             <input type="hidden" id="idconcepto" name="idconcepto">
                    <input type="hidden" id="idviatico" name="idviatico">
 

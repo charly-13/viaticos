@@ -20,7 +20,12 @@
 			$data['page_title'] = "Dashboard - viáticos ";
 			$data['page_name'] = "dashboard";
 			$data['page_functions_js'] = "functions_dashboard.js";
-			$this->views->getView($this,"dashboard",$data);
+			if (isset($_SESSION['userData']['es_jefe_directo']) && trim($_SESSION['userData']['es_jefe_directo']) === 'SI') {
+    $this->views->getView($this, "dashboardDirectores", $data);
+} else {
+    $this->views->getView($this, "dashboard", $data);
+}
+			//$this->views->getView($this,"dashboard",$data);
 			
 		} 
 

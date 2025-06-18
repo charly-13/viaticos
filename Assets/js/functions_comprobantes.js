@@ -4,7 +4,8 @@ function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial =
   console.log(rfcEmpresa);
   conceptoActual = idconcepto;
     viaticoActual = idviatico;
-  document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes - ${idconcepto}`;
+  // document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes - ${idconcepto}`;
+  document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes`;
   const contenedor = document.getElementById('contenedorDias');
   contenedor.innerHTML = '';
 
@@ -132,6 +133,10 @@ function guardarComprobantes() {
   comprobantesData.append('concepto', conceptoActual);
     comprobantesData.append('viatico', viaticoActual);
 
+      // ✅ Captura del total de gastos
+  const totalGastos = document.getElementById('totalGastosFactura').value || 0;
+  comprobantesData.append('totalGastosFactura', totalGastos);
+
   // Recorrer cada div de día
   const dias = contenedor.querySelectorAll('.bg-section');
 
@@ -186,7 +191,15 @@ throw new Error('Falta archivo XML');
     .then(response => response.json())
     .then(data => {
         if (data.status) {
-        swal("Comprobantes!", data.msg , "success");
+
+
+          swal({
+    title: "Comprobantes!",
+    text: data.msg,
+    type: "success"
+}, function () {
+    location.reload();
+});
         // Aquí puedes cerrar modal o resetear formulario
         $('#modalFormAddComprobantes').modal('hide');
         // Opcional: limpiar variables

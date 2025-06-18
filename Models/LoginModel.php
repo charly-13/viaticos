@@ -40,29 +40,43 @@
     c.apellido_paterno,
     c.apellido_materno,
     c.fecha_nacimiento,
-	c.email_corporativo As email_usuario,
+    c.email_corporativo AS email_usuario,
     c.genero,
     c.curp,
     c.id_area,
     c.id_jefe_directo,
 
-    -- Datos del jefe directo
-    jd.id_jefe_directo,
-    jefe.id_colaborador AS id_colaborador_jefe,
-    jefe.nombre_1 AS nombre_jefe,
-    jefe.apellido_paterno AS apellido_paterno_jefe,
-    jefe.apellido_materno AS apellido_materno_jefe,
-    jefe.email_corporativo AS email_jefe,  -- email del jefe directo
+    -- Datos del jefe directo (condicional)
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jd.id_jefe_directo END AS id_jefe_directo,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe.id_colaborador END AS id_colaborador_jefe,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe.nombre_1 END AS nombre_jefe,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe.apellido_paterno END AS apellido_paterno_jefe,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe.apellido_materno END AS apellido_materno_jefe,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe.email_corporativo END AS email_jefe,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe.id_jefe_directo END AS id_jefe_directo_jefe,
 
-    -- Datos del jefe del jefe
-    jd_superior.id_jefe_directo AS id_jefe_superior,
-    jefe_superior.id_colaborador AS id_colaborador_jefe_superior,
-    jefe_superior.nombre_1 AS nombre_jefe_superior,
-    jefe_superior.apellido_paterno AS apellido_paterno_jefe_superior,
-    jefe_superior.apellido_materno AS apellido_materno_jefe_superior,
-    jefe_superior.email_corporativo AS email_jefe_superior,  -- email del jefe del jefe
+    -- Datos del jefe del jefe (condicional)
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jd_superior.id_jefe_directo END AS id_jefe_superior,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe_superior.id_colaborador END AS id_colaborador_jefe_superior,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe_superior.nombre_1 END AS nombre_jefe_superior,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe_superior.apellido_paterno END AS apellido_paterno_jefe_superior,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe_superior.apellido_materno END AS apellido_materno_jefe_superior,
+    CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jefe_superior.email_corporativo END AS email_jefe_superior,
 
-    a.nombre_area  
+    a.nombre_area,
+
+    -- ¿Es jefe directo?
+    CASE 
+        WHEN jd_check.id_jefe_directo IS NOT NULL THEN 'SI'
+        ELSE 'NO'
+    END AS es_jefe_directo,
+
+    -- ¿Tiene CEO?
+    CASE 
+        WHEN c.id_jefe_directo = 0 THEN 'NO'
+        WHEN jefe.id_jefe_directo = 0 THEN 'NO'
+        ELSE 'SI'
+    END AS tiene_CEO
 
 FROM 
     usuarios AS u
@@ -70,60 +84,37 @@ INNER JOIN
     colaboradores AS c ON u.id_colaborador = c.id_colaborador
 INNER JOIN 
     areas AS a ON c.id_area = a.id_area 
-INNER JOIN 
+
+-- Cambié INNER JOIN por LEFT JOIN para que no se filtre si id_jefe_directo = 0
+LEFT JOIN 
     jefes_directos AS jd ON c.id_jefe_directo = jd.id_jefe_directo
-INNER JOIN 
-    colaboradores AS jefe ON jd.id_colaborador = jefe.id_colaborador  -- colaborador que es jefe directo
+LEFT JOIN 
+    colaboradores AS jefe ON jd.id_colaborador = jefe.id_colaborador
 
 -- Relación con el jefe del jefe
 LEFT JOIN 
     jefes_directos AS jd_superior ON jefe.id_jefe_directo = jd_superior.id_jefe_directo
 LEFT JOIN 
-    colaboradores AS jefe_superior ON jd_superior.id_colaborador = jefe_superior.id_colaborador  -- colaborador que es jefe del jefe
+    colaboradores AS jefe_superior ON jd_superior.id_colaborador = jefe_superior.id_colaborador
+
+-- Verificación si es jefe directo
+LEFT JOIN 
+    jefes_directos AS jd_check ON u.id_colaborador = jd_check.id_colaborador
 
 WHERE  
-    u.id_usuario = $this->intIdUsuario";
+    u.id_usuario = $this->intIdUsuario
+";
 			$request = $this->select($sql);
 			$_SESSION['userData'] = $request;
 			return $request;
 		}
 
-		public function getUserEmail(string $strEmail){
-			$this->strUsuario = $strEmail;
-			$sql = "SELECT idpersona,nombres,apellidos,status FROM persona WHERE 
-					email_user = '$this->strUsuario' and  
-					status = 1 ";
-			$request = $this->select($sql);
-			return $request;
-		}
 
-		public function setTokenUser(int $idpersona, string $token){
-			$this->intIdUsuario = $idpersona;
-			$this->strToken = $token;
-			$sql = "UPDATE persona SET token = ? WHERE idpersona = $this->intIdUsuario ";
-			$arrData = array($this->strToken);
-			$request = $this->update($sql,$arrData);
-			return $request;
-		}
 
-		public function getUsuario(string $email, string $token){
-			$this->strUsuario = $email;
-			$this->strToken = $token;
-			$sql = "SELECT idpersona FROM persona WHERE 
-					email_user = '$this->strUsuario' and 
-					token = '$this->strToken' and 					
-					status = 1 ";
-			$request = $this->select($sql);
-			return $request;
-		}
 
-		public function insertPassword(int $idPersona, string $password){
-			$this->intIdUsuario = $idPersona;
-			$this->strPassword = $password;
-			$sql = "UPDATE persona SET password = ?, token = ? WHERE idpersona = $this->intIdUsuario ";
-			$arrData = array($this->strPassword,"");
-			$request = $this->update($sql,$arrData);
-			return $request;
-		}
+
+
+
+
 	}
  ?>

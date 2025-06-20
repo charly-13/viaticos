@@ -777,6 +777,22 @@
     color: #333;
   }
 
+    .card-img-container {
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+
+  .card-img-container img {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    width: 100%;
+    height: auto;
+  }
+
+  .card-img-container:hover img {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
   /* #contenedorDias tbody tr:nth-child(odd) {
   background-color: rgba(233, 126, 46, 0.1); /* Naranja suave */
-} */
+ */

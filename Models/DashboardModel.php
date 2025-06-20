@@ -61,7 +61,7 @@ class DashboardModel extends Mysql
 	}
 
 
-public function solicitudesPendientesGerentes()
+public function solicitudesPendientesGerentesGenerales()
 {
 	$rolid = $_SESSION['userData']['id_rol'];
 	$idUser = $_SESSION['userData']['id_colaborador'];
@@ -113,6 +113,66 @@ public function solicitudesPendientesGerentes()
 	$request = $this->select_all($sql);
 	return $request;
 }
+
+public function solicitudesPendientesDirectores()
+{
+	$rolid = $_SESSION['userData']['id_rol'];
+	$idUser = $_SESSION['userData']['id_colaborador'];
+
+	// Solo ejecutamos la consulta SI el usuario es DIRECTOR (rol 4)
+	if ($rolid != 4) {
+		return []; // No es director → devolver un array vacío → no muestra nada
+	}
+
+	$where = "WHERE 
+		(vg.idjefedirectosuperior = $idUser AND vg.estado = 5)
+		OR
+		(vg.idjefedirecto = $idUser AND vg.estado = 2)";
+
+	$sql = "SELECT DISTINCT
+				vg.idviatico,
+				vg.codigo_solicitud,
+				vg.usuarioid,
+				vg.idjefedirecto,
+				vg.idjefedirectosuperior,
+				vg.nombreusuario,
+				vg.centrocostoid,
+				vg.fecha_salida,
+				vg.fecha_regreso,
+				vg.motivo,
+				vg.descripcion,
+				vg.lugar_destino,
+				vg.fechacreacion,
+				vg.estado,
+				vg.actualizado_por,
+				vg.fechaactualizacion,
+				vg.total,
+				vg.dias,
+				vg.comentariosjefatura,
+				vg.fechajefatura,
+				vg.comentariosjefaturasup,
+				vg.fechajefaturasup,
+				vg.comentarioscompras,
+				vg.fechacompras,
+				csup.nombre_1 as nombre_sup,
+				csup.apellido_paterno as apellido_paterno_sup,
+				csup.apellido_materno as apellido_materno_sup,
+				cdir.nombre_1 as nombre_dir,
+				cdir.apellido_paterno as apellido_paterno_dir,
+				cdir.apellido_materno as apellido_materno_dir,
+				us.id_usuario,
+				us.correo 
+			FROM viaticos_generales AS vg
+			LEFT JOIN colaboradores AS csup ON vg.idjefedirectosuperior = csup.id_colaborador
+			LEFT JOIN colaboradores AS cdir ON vg.idjefedirecto = cdir.id_colaborador
+			INNER JOIN usuarios AS us ON vg.usuarioid = us.id_usuario
+			$where";
+
+	$request = $this->select_all($sql);
+	return $request;
+}
+
+
 
 
 

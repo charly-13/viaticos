@@ -1,8 +1,8 @@
 <?php headerAdmin($data);
 
-echo '<pre>';
-print_r($_SESSION['userData']);
-echo '</pre>';
+// echo '<pre>';
+// print_r($_SESSION['userData']);
+// echo '</pre>';
 ?>
     
 

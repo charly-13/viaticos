@@ -265,6 +265,8 @@ function openModal() {
 
 
 
+
+
     rowTable = "";
     document.querySelector('#idviatico').value = "";
     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
@@ -312,7 +314,13 @@ function openModal() {
     fntCentrosCosto(session_id_area);
     renderTabla();
 
+      if(userData.id_rol=='4'){
+// console.log("deberiamos de mandar directamente a telles");
+ document.querySelector('#email_jefe_directo').value = 'raul.tellez@ldrsolutions.com.mx';
+  }
+
       document.querySelector('#idjefedirecto').value = userData.id_colaborador_jefe;
+
       document.querySelector('#idjefedirectosuperior').value = userData.id_colaborador_jefe_superior;
 
 

@@ -222,7 +222,8 @@ class ViaticosgeneralesModel extends Mysql
 			c.apellido_paterno,
 			c.apellido_materno,
 			c.telefono_personal,
-			c.email_corporativo
+			c.email_corporativo,
+			c.id_rol
 			FROM viaticos_generales as vg
 			INNER JOIN usuarios AS u 
 			ON vg.usuarioid = u.id_usuario

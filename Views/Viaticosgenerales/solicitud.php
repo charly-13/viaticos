@@ -18,136 +18,602 @@ getModal('modalValidacionCompras', $data);
   </div>
 
 
-      
-               <?php
-        if (empty($data['arrSolicitud'])) {
-      
-        ?>
-          <p>Datos no encontrados</p>
-        <?php } else {
 
- $estado = $data['arrSolicitud']['viaticos'];
-        ?>
+  <?php
+  if (empty($data['arrSolicitud'])) {
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="tile">
-        <section id="sPedido" class="invoice">
-          <div class="progress-track">
-            
-            <div class="step done">
-              <div class="circle"><i class="fa fa-check"></i></div>
-              <div class="label">Enviado</div>
-            </div>
-           
-             
-             
-                <?php  if ($estado['estado_viatico'] == 2) { ?>
-           
-            <div class="step active">
-              <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
-              <div class="label">Revisión (Jefe directo)</div>
-            </div>
-               <?php } else if($estado['estado_viatico'] == 4){  ?>
-            <div class="step bad">
-              <div class="circle"><i class="fa fa-times"></i></div>
-              <div class="label">Revisión (Jefe directo)</div>
-            </div>
+  ?>
+    <p>Datos no encontrados</p>
+  <?php } else {
 
-              <?php } else if($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10){  ?>
-         <div class="step done">
-              <div class="circle"><i class="fa fa-check"></i></div>
-              <div class="label">Revisión (Jefe directo)</div>
-            </div>
-      <?php }  else {  ?>
+    $estado = $data['arrSolicitud']['viaticos'];
+    $usuarioSolicitaEstado = $data['arrSolicitud']['viaticos'];
+    $detalleEstado = $data['arrSolicitud']['detalle'];
 
-      <div class="step">
-              <div class="circle"><i class="fa fa-check"></i></div>
-              <div class="label">Revisión (Jefe directo)</div>
-            </div>
+  dep($usuarioSolicitaEstado);
 
 
-      <?php } ?>
+  ?>
+
+    <?php if ($_SESSION['userData']['id_rol'] == '1') { ?>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tile">
+            <section id="sPedido" class="invoice">
+              <div class="progress-track">
+
+                <div class="step done">
+                  <div class="circle"><i class="fa fa-check"></i></div>
+                  <div class="label">Enviado</div>
+                </div>
+
+                <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                  <div class="step active">
+                    <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+                <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                  <div class="step bad">
+                    <div class="circle"><i class="fa fa-times"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+
+                <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+                <?php } else {  ?>
+
+                  <div class="step">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
 
 
+                <?php }
+                if ($estado['estado_viatico'] == 5) { ?>
 
-                      <?php  if ( $estado['estado_viatico'] == 5) { ?>
-           
-            <div class="step active">
-              <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
-              <div class="label">Validación (Jefe superior)</div>
-            </div>
-               <?php } else if($estado['estado_viatico'] == 7){  ?>
-            <div class="step bad">
-              <div class="circle"><i class="fa fa-times"></i></div>
-              <div class="label">Validación (Jefe superior)</div>
-            </div>
+                  <div class="step active">
+                    <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
+                <?php } else if ($estado['estado_viatico'] == 7) {  ?>
+                  <div class="step bad">
+                    <div class="circle"><i class="fa fa-times"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
 
-              <?php } else if($estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10){  ?>
-         <div class="step done">
-              <div class="circle"><i class="fa fa-check"></i></div>
-              <div class="label">Validación (Jefe superior)</div>
-            </div>
-      <?php }  else {  ?>
+                <?php } else if ($estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
+                <?php } else {  ?>
 
-      <div class="step">
-              <div class="circle"><i class="fa fa-file"></i></div>
-              <div class="label">Validación (Jefe superior)</div>
-            </div>
-
-
-      <?php } ?>
+                  <div class="step">
+                    <div class="circle"><i class="fa fa-file"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
 
 
-                            <?php  if ( $estado['estado_viatico'] == 8) { ?>
-           
-            <div class="step active">
-              <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
-              <div class="label">Autorización Realizada(Compras)</div>
-            </div>
-               <?php } else if($estado['estado_viatico'] == 9){  ?>
-            <div class="step bad">
-              <div class="circle"><i class="fa fa-times"></i></div>
-              <div class="label">Autorización Realizada(Compras)</div>
-            </div>
+                <?php }
 
-              <?php } else if($estado['estado_viatico'] == 10){  ?>
-         <div class="step done">
-              <div class="circle"><i class="fa fa-check"></i></div>
-              <div class="label">Autorización Realizada(Compras)</div>
-            </div>
-      <?php }  else {  ?>
+                if ($estado['estado_viatico'] == 8) { ?>
 
-      <div class="step">
-              <div class="circle"><i class="fa fa-file"></i></div>
-              <div class="label">Autorización Realizada(Compras)</div>
-            </div>
+                  <div class="step active">
+                    <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
+                <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                  <div class="step bad">
+                    <div class="circle"><i class="fa fa-times"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
 
+                <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
+                <?php } else {  ?>
 
-      <?php } ?>
-
+                  <div class="step">
+                    <div class="circle"><i class="fa fa-file"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
 
 
+                <?php } ?>
 
 
+              </div>
 
-
-
-            <!-- <div class="step">
-              <div class="circle"><i class="fa fa-flag-checkered"></i></div>
-              <div class="label">Autorización Realizada(Compras)</div>
-            </div> -->
-
-            
+            </section>
           </div>
-
-        </section>
+        </div>
       </div>
-    </div>
-  </div>
+
+      <?php
 
 
-      <?php } ?>
+    } else if ($_SESSION['userData']['id_rol'] == '3') {
+
+      // echo $_SESSION['userData']['id_colaborador'];
+
+      //  dep($usuarioSolicitaEstado['id_colaborador']);
+
+      if ($_SESSION['userData']['id_colaborador'] == $usuarioSolicitaEstado['id_colaborador']) {
+        echo 'Deberia de mostrarse solo dos';
+      ?>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tile">
+              <section id="sPedido" class="invoice">
+                <div class="progress-track">
+
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Enviado</div>
+                  </div>
+
+                  <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+
+                  <?php }
+
+                  if ($estado['estado_viatico'] == 8) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-file"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+
+                  <?php } ?>
+
+
+                </div>
+
+              </section>
+            </div>
+          </div>
+        </div>
+
+      <?php
+
+      } else {
+        echo 'Deberia de mostrarse  tres';
+
+      ?>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tile">
+              <section id="sPedido" class="invoice">
+                <div class="progress-track">
+
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Enviado</div>
+                  </div>
+
+                  <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+
+                  <?php }
+                  if ($estado['estado_viatico'] == 5) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Validación (Jefe superior)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 7) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Validación (Jefe superior)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Validación (Jefe superior)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-file"></i></div>
+                      <div class="label">Validación (Jefe superior)</div>
+                    </div>
+
+
+                  <?php }
+
+                  if ($estado['estado_viatico'] == 8) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-file"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+
+                  <?php } ?>
+
+
+                </div>
+
+              </section>
+            </div>
+          </div>
+        </div>
+
+
+  <?php
+
+
+
+
+
+      }
+    }else if($_SESSION['userData']['id_rol'] == '4'){
+
+
+          if ($_SESSION['userData']['id_colaborador'] == $usuarioSolicitaEstado['id_colaborador']) {
+            
+        echo 'Deberia de mostrarse solo dos';
+      ?>
+
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="tile">
+              <section id="sPedido" class="invoice">
+                <div class="progress-track">
+
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Enviado</div>
+                  </div>
+
+                  <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+
+                  <?php }
+
+                  if ($estado['estado_viatico'] == 8) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-file"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+
+                  <?php } ?>
+
+
+                </div>
+
+              </section>
+            </div>
+          </div>
+        </div>
+
+      <?php
+
+      } else if($usuarioSolicitaEstado['id_rol']=="3") {
+        echo 'Deberia de mostrarse  dos';
+
+      ?>
+                <div class="row">
+          <div class="col-md-12">
+            <div class="tile">
+              <section id="sPedido" class="invoice">
+                <div class="progress-track">
+
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Enviado</div>
+                  </div>
+
+                  <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+
+                  <?php }
+
+                  if ($estado['estado_viatico'] == 8) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-file"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+
+                  <?php } ?>
+
+
+                </div>
+
+              </section>
+            </div>
+          </div>
+        </div>
+
+
+
+  <?php
+
+
+
+
+
+      }else if($usuarioSolicitaEstado['id_rol']=="1") {
+
+        ?>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="tile">
+            <section id="sPedido" class="invoice">
+              <div class="progress-track">
+
+                <div class="step done">
+                  <div class="circle"><i class="fa fa-check"></i></div>
+                  <div class="label">Enviado</div>
+                </div>
+
+                <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                  <div class="step active">
+                    <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+                <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                  <div class="step bad">
+                    <div class="circle"><i class="fa fa-times"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+
+                <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+                <?php } else {  ?>
+
+                  <div class="step">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Revisión (Jefe directo)</div>
+                  </div>
+
+
+                <?php }
+                if ($estado['estado_viatico'] == 5) { ?>
+
+                  <div class="step active">
+                    <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
+                <?php } else if ($estado['estado_viatico'] == 7) {  ?>
+                  <div class="step bad">
+                    <div class="circle"><i class="fa fa-times"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
+
+                <?php } else if ($estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
+                <?php } else {  ?>
+
+                  <div class="step">
+                    <div class="circle"><i class="fa fa-file"></i></div>
+                    <div class="label">Validación (Jefe superior)</div>
+                  </div>
+
+
+                <?php }
+
+                if ($estado['estado_viatico'] == 8) { ?>
+
+                  <div class="step active">
+                    <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
+                <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                  <div class="step bad">
+                    <div class="circle"><i class="fa fa-times"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
+
+                <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
+                <?php } else {  ?>
+
+                  <div class="step">
+                    <div class="circle"><i class="fa fa-file"></i></div>
+                    <div class="label">Autorización Realizada(Compras)</div>
+                  </div>
+
+
+                <?php } ?>
+
+
+              </div>
+
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <?php
+
+         }
+
+    }
+  } ?>
 
 
 
@@ -168,7 +634,7 @@ getModal('modalValidacionCompras', $data);
           $usuarioSolicita = $data['arrSolicitud']['viaticos'];
           $detalle = $data['arrSolicitud']['detalle'];
 
-          //dep($usuarioSolicita);
+          // dep($usuarioSolicita);
 
 
         ?>
@@ -191,14 +657,14 @@ getModal('modalValidacionCompras', $data);
               <div class="col-4">
                 <address><strong><i class="fas fa-building text-primary"></i><?= NOMBRE_EMPESA; ?></strong><br>
                   <?= DIRECCION ?><br>
-                  
-                   <a href="<?= WEB_EMPRESA ?>" target="_blank">www.ldrsolutions.mx</a>
+
+                  <a href="<?= WEB_EMPRESA ?>" target="_blank">www.ldrsolutions.mx</a>
                 </address>
               </div>
               <div class="col-4">
-                <address><strong><i class="fas fa-user text-primary"></i>Solicitante:  <?= $usuarioSolicita['nombreusuario'] ?></strong><br>
-                 <i class="fas fa-phone-alt"></i> Tel: <?= $usuarioSolicita['telefono_personal'] ?><br>
-                 <i class="fas fa-envelope"></i> Email: <?= $usuarioSolicita['email_corporativo'] ?>
+                <address><strong><i class="fas fa-user text-primary"></i>Solicitante: <?= $usuarioSolicita['nombreusuario'] ?></strong><br>
+                  <i class="fas fa-phone-alt"></i> Tel: <?= $usuarioSolicita['telefono_personal'] ?><br>
+                  <i class="fas fa-envelope"></i> Email: <?= $usuarioSolicita['email_corporativo'] ?>
                 </address>
               </div>
               <div class="col-4"><b class="folio_solicitud"><i class="fas fa-calendar-alt text-primary"></i>Fecha: <?= $usuarioSolicita['fechacreacion'] ?></b><br>
@@ -206,7 +672,7 @@ getModal('modalValidacionCompras', $data);
 
                 <!-- <b>Estado:</b>  -->
                 <?php
-                       /*         $estado = $usuarioSolicita['estado_viatico'] ?? '';
+                /*         $estado = $usuarioSolicita['estado_viatico'] ?? '';
                                 switch ($estado) {
                                   case 2:
                                     echo '<span style="background-color: #FFA500; color: #fff; padding: 4px 8px; border-radius: 5px; font-weight: bold;">En Revisión</span>';
@@ -228,8 +694,8 @@ getModal('modalValidacionCompras', $data);
                                     break;
                                 }
                     */
-                    ?>  
-                                <br>
+                ?>
+                <br>
 
               </div>
             </div>
@@ -348,7 +814,7 @@ getModal('modalValidacionCompras', $data);
             }
             ?>
 
-                        <?php
+            <?php
             if ($usuarioSolicita['estado_viatico'] >= 6) {
             ?>
               <h6 style="background-color: #d16032; color: white;font-size: 15px; padding: 6px;"><i class="fas fa-user-check"></i> Observaciones y respuesta proporcionadas por el Jefe Superior</h6>
@@ -378,33 +844,42 @@ getModal('modalValidacionCompras', $data);
 
 
 
-<div class="row d-print-none mt-2">
-  <div class="col-12 d-flex justify-content-center btn-spacing-sol">
+            <div class="row d-print-none mt-2">
+              <div class="col-12 d-flex justify-content-center btn-spacing-sol">
 
-    <?php if ($usuarioSolicita['estado_viatico'] == 2) { ?>
-      <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModal(<?php echo $usuarioSolicita['idviatico'] ?>)">
-        <i class="fa fa-tasks"></i> Gestionar
-      </button>
-    <?php } ?>
+                <?php 
+                if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $usuarioSolicitaEstado['id_rol']!="3") {
+                if ($usuarioSolicita['estado_viatico'] == 2) { ?>
+                  <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModal(<?php echo $usuarioSolicita['idviatico'] ?>)">
+                    <i class="fa fa-tasks"></i> Gestionarss
+                  </button>
+                <?php } }?>
 
-    <?php if ($usuarioSolicita['estado_viatico'] == 4 || $usuarioSolicita['estado_viatico'] == 5) { ?>
-      <button class="btn btn-info" style="width: 300px;" type="button" onclick="openModalValidatejefeSuperior(<?php echo $usuarioSolicita['idviatico'] ?>)">
-        <i class="fa fa-tasks"></i> Gestionar
-      </button>
-    <?php } ?>
+                <?php 
+                 if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador']) {
+                if ($usuarioSolicita['estado_viatico'] == 4 || $usuarioSolicita['estado_viatico'] == 5) { ?>
+                  <button class="btn btn-info" style="width: 300px;" type="button" onclick="openModalValidatejefeSuperior(<?php echo $usuarioSolicita['idviatico'] ?>)">
+                    <i class="fa fa-tasks"></i> Gestionar
+                  </button>
+                <?php }} ?>
 
-        <?php if ($usuarioSolicita['estado_viatico'] == 7 || $usuarioSolicita['estado_viatico'] == 8) { ?>
-      <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModalValidateCompras(<?php echo $usuarioSolicita['idviatico'] ?>)">
-        <i class="fa fa-tasks"></i> Finalizar Solicitud
-      </button>
-    <?php } ?>
+                <?php 
+// echo $_SESSION['userData']['id_colaborador'] ; echo  $usuarioSolicitaEstado['id_colaborador'];
 
-    <a class="btn btn-primary" style="width: 300px;" href="javascript:window.print('#sPedido');">
-      <i class="fa fa-print"></i> Imprimir
-    </a>
 
-  </div>
-</div>
+                          if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador']) {
+                if ($usuarioSolicita['estado_viatico'] == 7 || $usuarioSolicita['estado_viatico'] == 8) { ?>
+                  <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModalValidateCompras(<?php echo $usuarioSolicita['idviatico'] ?>)">
+                    <i class="fa fa-tasks"></i> Finalizar Solicitud
+                  </button>
+                <?php }} ?>
+
+                <a class="btn btn-primary" style="width: 300px;" href="javascript:window.print('#sPedido');">
+                  <i class="fa fa-print"></i> Imprimir
+                </a>
+
+              </div>
+            </div>
 
 
 

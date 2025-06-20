@@ -54,6 +54,16 @@
 	///DIRECTOR
 
 	//roberto.talavera@ldrsolutions.com.mx   K37J54
+
+	//DIRECTOR luis.ornelas@ldrsolutions.com.mx  U87X24    Cargo: DIRECTOR DE MARKETING VANS & PICKUPS
+
+	//armando.delcarmen@ldrsolutions.com.mx   Y96S88
+
+	//abraham.hernandez@ldrsolutions.com.mx   Z36J79  //con este usuaerio se pueden hacer pruebas
+
+	//S EQUEDA PENDIENTE REVISAR LOS PERFILES Y ACCESOS A BOTONES DE QUIEN AUTORIZA LAS SOLICITUDES Y HACER TEST SOBRE STO.
+
+
 	
 
  ?>

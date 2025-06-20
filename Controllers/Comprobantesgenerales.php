@@ -125,7 +125,6 @@ class Comprobantesgenerales extends Controllers
     public function getViaticosAll()
     {
 
-        //Se muestran las solicitudes según el usuario que las ha generado.
 
 
         $arrData = $this->model->selectViaticosAll();
@@ -133,7 +132,7 @@ class Comprobantesgenerales extends Controllers
             // $btnView = '';
             // $btnComprobante = '';
             $btnDelete = '';
-            $estadoViaticoNum = $arrData[$i]['estado_viatico'];
+            $estadoViaticoNum = $arrData[$i]['estado_viatico']; 
 
 
             if ($estadoViaticoNum == 2) {

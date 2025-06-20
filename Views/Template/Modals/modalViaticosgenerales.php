@@ -13,7 +13,10 @@
         <form id="formViaticoGeneral" name="formViaticoGeneral">
           <input type="hidden" id="idviatico" name="idviatico" value="">
           <input type="hidden" id="usuarioid" name="usuarioid" value="<?= $_SESSION['userData']['id_usuario'] ?>">
-          <input type="hidden" id="email_jefe_directo" name="email_jefe_directo" value="<?= $_SESSION['userData']['email_jefe'] ?>">
+             <input type="hidden" id="" name="" value="">
+          <input type="text" id="idjefedirecto" name="idjefedirecto" > 
+          <input type="text" id="idjefedirectosuperior" name="idjefedirectosuperior" > 
+           <input type="hidden" id="email_jefe_directo" name="email_jefe_directo" value="<?= $_SESSION['userData']['email_jefe'] ?>">
           <input class="form-control" id="fechacreacion" name="fechacreacion" type="datetime-local" readonly style="display: none;">
 
           <div class="row">

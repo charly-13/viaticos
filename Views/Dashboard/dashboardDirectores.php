@@ -3,7 +3,7 @@
 // echo '<pre>';
 // print_r($_SESSION['userData']);
 // echo '</pre>';
-?>
+// ?>
     
 
 <main class="app-content">
@@ -26,24 +26,32 @@
             <table class="table table-striped table-sm">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Cliente</th>
-                  <th>Estado</th>
-                  <th class="text-right">Monto</th>
+                  <th>FOLIO</th>
+                  <th>Solicita</th>
+                  <th>Total</th>
+                 
                   <th></th>
+                
                 </tr>
               </thead>
-              <tbody>
+              <tbody> 
         
+        <?php 
+                    if(count($data['solicitudesPendientes']) > 0 ){
+                      foreach ($data['solicitudesPendientes'] as $pedido) {
+                 ?>
                 <tr>
-                  <td>1001</td>
-                  <td></td>
-                  <td></td>
-                  <td class="text-right"></td>
-                  <td><a href="" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-                </tr>
-                
+                  <td><?= $pedido['codigo_solicitud'] ?></td>
+                  <td><?= $pedido['correo'] ?></td>
+           
+                  <td><?= $pedido['total'] ?></td>
 
+                 
+                      
+                  <td><a href="<?= base_url() ?>/viaticosgenerales/solicitud/<?= $pedido['idviatico'] ?>" ><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                </tr>
+                <?php } 
+                  } ?>
               </tbody>
             </table>
           </div>
@@ -89,9 +97,9 @@
   <div class="row">
     <div class="col-md-6">
       <div class="tile" onclick="abrirModalYRedirigir()">
-        <h3 class="tile-title">Viáticos Generales</h3>
+        <!-- <h3 class="tile-title">Viáticos Generales</h3> -->
         <div class="image-container">
-      <img src="<?= media() ?>/images/vuelos.jpg" alt="Imagen 2"  >
+     <img src="<?= media() ?>/images/viaticos.png" alt="Imagen 2"  >
         </div>
       </div>
     </div>
@@ -99,9 +107,9 @@
 
   <div class="col-md-6">
     <div class="tile">
-      <h3 class="tile-title">Vuelos y Hoteles</h3>
+      <!-- <h3 class="tile-title">Vuelos y Hoteles</h3> -->
       <div class="image-container">
-        <img src="<?= media() ?>/images/vuelos.jpg" alt="Imagen 2"  >
+        <img src="<?= media() ?>/images/vuelos.png" alt="Imagen 2"  >
       </div>
     </div>
   </div>

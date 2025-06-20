@@ -45,6 +45,10 @@
     c.curp,
     c.id_area,
     c.id_jefe_directo,
+    c.id_rol,
+
+    r.idrol AS rol_id,
+    r.nombre AS nombre_rol,
 
     -- Datos del jefe directo (condicional)
     CASE WHEN c.id_jefe_directo = 0 THEN NULL ELSE jd.id_jefe_directo END AS id_jefe_directo,
@@ -83,26 +87,24 @@ FROM
 INNER JOIN 
     colaboradores AS c ON u.id_colaborador = c.id_colaborador
 INNER JOIN 
-    areas AS a ON c.id_area = a.id_area 
+    areas AS a ON c.id_area = a.id_area
+INNER JOIN 
+    roles AS r ON c.id_rol = r.idrol -- <<<<<< AQUI SOLO AGREGAMOS ESTO
 
--- Cambié INNER JOIN por LEFT JOIN para que no se filtre si id_jefe_directo = 0
 LEFT JOIN 
     jefes_directos AS jd ON c.id_jefe_directo = jd.id_jefe_directo
 LEFT JOIN 
     colaboradores AS jefe ON jd.id_colaborador = jefe.id_colaborador
-
--- Relación con el jefe del jefe
 LEFT JOIN 
     jefes_directos AS jd_superior ON jefe.id_jefe_directo = jd_superior.id_jefe_directo
 LEFT JOIN 
     colaboradores AS jefe_superior ON jd_superior.id_colaborador = jefe_superior.id_colaborador
-
--- Verificación si es jefe directo
 LEFT JOIN 
     jefes_directos AS jd_check ON u.id_colaborador = jd_check.id_colaborador
 
 WHERE  
     u.id_usuario = $this->intIdUsuario
+    
 ";
 			$request = $this->select($sql);
 			$_SESSION['userData'] = $request;

@@ -12,6 +12,8 @@ class ViaticosgeneralesModel extends Mysql
 
 	public $strCodigosolicitud;
 	public $intUsuarioid;
+	public $intIdjefedirecto;
+	public $intIdjefedirectosuperior;
 	public $strNombreusuario;
 	public $intlistCentrosCosto;
 	public $strFecha_salida;
@@ -39,12 +41,14 @@ class ViaticosgeneralesModel extends Mysql
 		parent::__construct();
 	}
 
-	public function insertViaticosgeneral(string $codigo_solicitud, int $usuarioid, string $nombreusuario, int $centrocostoid, string $fecha_salida, string $fecha_regreso, string $motivo, string $descripcion, string $lugar_destino, string $fechacreacion, int $estado, string $actualizado_por, string $total, int $dias)
+	public function insertViaticosgeneral(string $codigo_solicitud, int $usuarioid, int $idjefedirecto, int $idjefedirectosuperior, string $nombreusuario, int $centrocostoid, string $fecha_salida, string $fecha_regreso, string $motivo, string $descripcion, string $lugar_destino, string $fechacreacion, int $estado, string $actualizado_por, string $total, int $dias)
 	{
 
 		$return = 0;
 		$this->strCodigosolicitud = $codigo_solicitud;
 		$this->intUsuarioid = $usuarioid;
+		$this->intIdjefedirecto = $idjefedirecto;
+		$this->intIdjefedirectosuperior = $idjefedirectosuperior;
 		$this->strNombreusuario = $nombreusuario;
 		$this->intlistCentrosCosto = $centrocostoid;
 		$this->strFecha_salida = $fecha_salida;
@@ -63,10 +67,12 @@ class ViaticosgeneralesModel extends Mysql
 
 		// if(empty($request))
 		// {
-		$query_insert  = "INSERT INTO viaticos_generales(codigo_solicitud,usuarioid,nombreusuario,centrocostoid,fecha_salida,fecha_regreso,motivo,descripcion,lugar_destino,fechacreacion,estado,actualizado_por,total,dias) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		$query_insert  = "INSERT INTO viaticos_generales(codigo_solicitud,usuarioid,idjefedirecto,idjefedirectosuperior,nombreusuario,centrocostoid,fecha_salida,fecha_regreso,motivo,descripcion,lugar_destino,fechacreacion,estado,actualizado_por,total,dias) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 		$arrData = array(
 			$this->strCodigosolicitud,
 			$this->intUsuarioid,
+			$this->intIdjefedirecto,
+			$this->intIdjefedirectosuperior,
 			$this->strNombreusuario,
 			$this->intlistCentrosCosto,
 			$this->strFecha_salida,

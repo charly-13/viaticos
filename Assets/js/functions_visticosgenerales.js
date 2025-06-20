@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-        if (localStorage.getItem('abrirModalViaticos') === '1') {
+    if (localStorage.getItem('abrirModalViaticos') === '1') {
         localStorage.removeItem('abrirModalViaticos'); // Evita que se abra siempre
         openModal();
         console.log("abrimos");
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json"
         },
-        "ajax": { 
+        "ajax": {
             "url": " " + base_url + "/Viaticosgenerales/getViaticos",
             "dataSrc": ""
         },
@@ -27,12 +27,12 @@ document.addEventListener('DOMContentLoaded', function () {
             { "data": "fecha_salida" },
             { "data": "fecha_regreso" },
             { "data": "nombre_centro" },
-                              { 
-          "data": "total",
-          "render": function(data, type, row) {
-              return formatNumberCurrency(data);
-          }
-        },
+            {
+                "data": "total",
+                "render": function (data, type, row) {
+                    return formatNumberCurrency(data);
+                }
+            },
             { "data": "estado_viatico" },
             { "data": "options" }
         ],
@@ -67,49 +67,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-    if (document.querySelector("#foto")) {
-        let foto = document.querySelector("#foto");
-        foto.onchange = function (e) {
-            let uploadFoto = document.querySelector("#foto").value;
-            let fileimg = document.querySelector("#foto").files;
-            let nav = window.URL || window.webkitURL;
-            let contactAlert = document.querySelector('#form_alert');
-            if (uploadFoto != '') {
-                let type = fileimg[0].type;
-                let name = fileimg[0].name;
-                if (type != 'image/jpeg' && type != 'image/jpg' && type != 'image/png') {
-                    contactAlert.innerHTML = '<p class="errorArchivo">El archivo no es válido.</p>';
-                    if (document.querySelector('#img')) {
-                        document.querySelector('#img').remove();
-                    }
-                    document.querySelector('.delPhoto').classList.add("notBlock");
-                    foto.value = "";
-                    return false;
-                } else {
-                    contactAlert.innerHTML = '';
-                    if (document.querySelector('#img')) {
-                        document.querySelector('#img').remove();
-                    }
-                    document.querySelector('.delPhoto').classList.remove("notBlock");
-                    let objeto_url = nav.createObjectURL(this.files[0]);
-                    document.querySelector('.prevPhoto div').innerHTML = "<img id='img' src=" + objeto_url + ">";
-                }
-            } else {
-                alert("No selecciono foto");
-                if (document.querySelector('#img')) {
-                    document.querySelector('#img').remove();
-                }
-            }
-        }
-    }
 
-    if (document.querySelector(".delPhoto")) {
-        let delPhoto = document.querySelector(".delPhoto");
-        delPhoto.onclick = function (e) {
-            document.querySelector("#foto_remove").value = 1;
 
-        }
-    }
+
 
     //NUEVA SOLICITUD DE  VIÁTICO
     let formViaticoGeneral = document.querySelector("#formViaticoGeneral");
@@ -296,12 +256,15 @@ function fntDelInfo(idcategoria) {
 
 
 
-      const usuarioEnSesion = 'usuario1'; // <-- Cámbialo a otro valor para probar el otro caso
+const usuarioEnSesion = 'usuario1'; // <-- Cámbialo a otro valor para probar el otro caso
 
-      const fechaSalidaInput = document.getElementById('fecha_salida');
-  const fechaRegresoInput = document.getElementById('fecha_regreso');
+const fechaSalidaInput = document.getElementById('fecha_salida');
+const fechaRegresoInput = document.getElementById('fecha_regreso');
 
 function openModal() {
+
+
+
     rowTable = "";
     document.querySelector('#idviatico').value = "";
     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
@@ -309,7 +272,7 @@ function openModal() {
     document.querySelector('#btnText').innerHTML = "Solicitar";
     document.querySelector('#titleModal').innerHTML = '<i class="fa fa-file-alt mr-2"></i> Registrar Nueva Solicitud';
     document.querySelector("#formViaticoGeneral").reset();
-
+ 
     const ahora = new Date();
     const year = ahora.getFullYear();
     const month = String(ahora.getMonth() + 1).padStart(2, '0');
@@ -320,13 +283,12 @@ function openModal() {
     document.querySelector('#fechacreacion').value = fechaHoraLocal;
 
 
-        // --- Lógica de fechas para inputs fechaSalida y fechaRegreso ---
-    const usuarioEnSesion = 'usuario1'; // <- Aquí pones el usuario real o lo traes de sesión
+    // --- Lógica de fechas para inputs fechaSalida y fechaRegreso ---
 
-    // Calculamos la fecha mínima según el usuario
+    // Si el usuario es diferente a el área de POST VENTA el usuario podrá seleccionar despues de 7 días de anticipo
     let fechaMin = new Date();
-    if(usuarioEnSesion === 'usuario1'){
-        fechaMin.setDate(fechaMin.getDate() + 7); // +7 días para usuario1
+    if (userData.id_area != '90') {
+        fechaMin.setDate(fechaMin.getDate() + 8); // +7 días para usuario1
     }
     // Convertimos a formato YYYY-MM-DD para el input date
     const fechaMinStr = fechaMin.toISOString().split('T')[0];
@@ -335,7 +297,7 @@ function openModal() {
     const fechaSalidaInput = document.querySelector('#fecha_salida');
     const fechaRegresoInput = document.querySelector('#fecha_regreso');
 
-    if(fechaSalidaInput && fechaRegresoInput){
+    if (fechaSalidaInput && fechaRegresoInput) {
         fechaSalidaInput.min = fechaMinStr;
         fechaRegresoInput.min = fechaMinStr;
         fechaSalidaInput.value = fechaMinStr;
@@ -350,9 +312,10 @@ function openModal() {
     fntCentrosCosto(session_id_area);
     renderTabla();
 
-    
+      document.querySelector('#idjefedirecto').value = userData.id_colaborador_jefe;
+      document.querySelector('#idjefedirectosuperior').value = userData.id_colaborador_jefe_superior;
 
-    
+
 }
 
 
@@ -363,41 +326,41 @@ let diasEnRango = 0;
 
 
 function calcularDiasEntreFechas(fechaInicio, fechaFin) {
-  const inicio = new Date(fechaInicio);
-  const fin = new Date(fechaFin);
-  const diffTime = fin - inicio;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-  return diffDays;
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+    const diffTime = fin - inicio;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    return diffDays;
 }
 
 
 fechaRegresoInput.addEventListener('change', () => {
-  const salida = fecha_salida.value;
-  const regreso = fecha_regreso.value;
+    const salida = fecha_salida.value;
+    const regreso = fecha_regreso.value;
 
-  if (salida && regreso) {
-    if (new Date(regreso) < new Date(salida)) {
-      infoDias.textContent = 'La fecha de regreso no puede ser anterior a la de salida.';
-      diasEnRango = 0;
+    if (salida && regreso) {
+        if (new Date(regreso) < new Date(salida)) {
+            infoDias.textContent = 'La fecha de regreso no puede ser anterior a la de salida.';
+            diasEnRango = 0;
+        } else {
+            diasEnRango = calcularDiasEntreFechas(salida, regreso);
+            infoDias.textContent = `Días seleccionados: ${diasEnRango}`;
+            const input = document.getElementById('inputDias');
+            input.value = diasEnRango;
+
+            montoPorDia();
+
+
+        }
     } else {
-      diasEnRango = calcularDiasEntreFechas(salida, regreso);
-      infoDias.textContent = `Días seleccionados: ${diasEnRango}`;
-        const input = document.getElementById('inputDias');
-         input.value = diasEnRango;
+        infoDias.textContent = '';
+        diasEnRango = 0;
 
-         montoPorDia();
-        
-     
+        const input = document.getElementById('inputDias');
+        input.value = '';
+        montoPorDia();
+
     }
-  } else {
-    infoDias.textContent = '';
-    diasEnRango = 0;
-
-        const input = document.getElementById('inputDias');
-         input.value = '';
-         montoPorDia();
-        
-  }
 });
 
 // function montoPorDia(){
@@ -414,7 +377,7 @@ fechaRegresoInput.addEventListener('change', () => {
 
 //  document.getElementById('monto_Subtotal1').value = formatMoney(resultado);
 
- 
+
 // }
 
 
@@ -455,7 +418,7 @@ function fntAreas() {
                 // Deshabilitar el input después de cargar las opciones
                 document.querySelector('#listArea').disabled = true;
                 $('#listArea').selectpicker('render');
-                console.log(session_id_area);
+                // console.log(session_id_area);
 
                 document.querySelector('#listArea').value = session_id_area;
                 $('#listArea').selectpicker('refresh');
@@ -485,13 +448,30 @@ function fntCentrosCosto(session_id_area) {
     }
 }
 
+let conceptos = "";
 
-let conceptos = [
-    { concepto: "Alimentación", solicituddiaria: "500.00", subTotal: "$0.00", comentario: "" },
-    { concepto: "Transporte Local", solicituddiaria: "", subTotal: "$0.00", comentario: "" },
-    { concepto: "Estacionamiento", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
-    // { concepto: "Otros (Especificar)", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
-];
+if (userData.id_rol == '4') {//MONTOS CUANDO ES DIRECTO
+    conceptos = [
+        { concepto: "Alimentación", solicituddiaria: "1540.00", subTotal: "$0.00", comentario: "" },
+        { concepto: "Otros (Especificar)", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
+    ];
+} else if (userData.id_rol == '3') { //MONTOS CUANDO ES GERENTE GENERAL
+    conceptos = [
+        { concepto: "Alimentación", solicituddiaria: "1100.00", subTotal: "$0.00", comentario: "" },
+        { concepto: "Otros (Especificar)", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
+    ];
+
+} else if (userData.id_rol == '1') { //MONTOS CUANDO ES PERSONAL OPERATIVO
+    conceptos = [
+        { concepto: "Alimentación", solicituddiaria: "485.00", subTotal: "$0.00", comentario: "" },
+        { concepto: "Otros (Especificar)", solicituddiaria: "", subTotal: "$0.00", comentario: "" }
+    ];
+
+}
+
+
+
+
 
 
 function renderTabla() {
@@ -516,6 +496,7 @@ function renderTabla() {
                 <input 
                     type="text" 
                     class="form-control" 
+                    autocomplete="off"
                     id="monto_Diario${i + 1}"
                     value="${montoFormateado}" 
                     onchange="aplicarDiasporMontos(this.value, ${filaIndex})"
@@ -557,8 +538,8 @@ function aplicarDiasporMontos(valor, index) {
 
     // Actualizar el arreglo conceptos si quieres conservar los datos
     //conceptos[index - 1].subTotal = subtotal;
-  conceptos[index - 1].solicituddiaria = valorNum.toFixed(2); // String con 2 decimales ✔
-conceptos[index - 1].subTotal = subtotal.toFixed(2); 
+    conceptos[index - 1].solicituddiaria = valorNum.toFixed(2); // String con 2 decimales ✔
+    conceptos[index - 1].subTotal = subtotal.toFixed(2);
 
     // Recalcular el total general
     calcularTotalGeneral();
@@ -583,7 +564,7 @@ function calcularTotalGeneral() {
 function actualizar(index, campo, valor) {
     conceptos[index][campo] = valor;
     console.log(conceptos);
-     sincronizarConceptos();
+    sincronizarConceptos();
 
 
 }
@@ -593,15 +574,15 @@ function manejarCambioMonto(input, index) {
     conceptos[index]['solicituddiaria'] = valorNumerico.toFixed(2); // Guardar limpio con 2 decimales
     input.value = formatMoney(conceptos[index]['solicituddiaria']); // Mostrar formateado
     actualizarTotal();
-      
+
 }
 
 
 function actualizarTotal() {
     const total = conceptos.reduce((acc, c) => acc + parseFloat(c.solicituddiaria || 0), 0);
     //document.getElementById("total-montos").innerText = formatMoney(total.toFixed(2));
-     document.getElementById("total").value = formatMoney(total.toFixed(2));
-      document.getElementById("total_limpio").value = total.toFixed(2);
+    document.getElementById("total").value = formatMoney(total.toFixed(2));
+    document.getElementById("total_limpio").value = total.toFixed(2);
 }
 
 // Formatea un número como dinero: 1234.5 => $1,234.50
@@ -610,7 +591,7 @@ function formatMoney(valor) {
 }
 
 
-function  sincronizarConceptos  () {
+function sincronizarConceptos() {
     conceptos.forEach((c, i) => {
         const filaIndex = i + 1;
 
@@ -628,17 +609,9 @@ function  sincronizarConceptos  () {
         // 🔄 Actualizar el objeto en el arreglo
         c.concepto = conceptoValor;
         c.solicituddiaria = montoValor.toFixed(2);
-    //c.subTotal = subtotalValor.toFixed(2);  // 🔄 Aquí también lo guardas como "75000.00"
-    c.subTotal = subtotalValor.toFixed(2);   // 🔔 CORREGIDO → también string
+        //c.subTotal = subtotalValor.toFixed(2);  // 🔄 Aquí también lo guardas como "75000.00"
+        c.subTotal = subtotalValor.toFixed(2);   // 🔔 CORREGIDO → también string
         c.comentario = comentarioValor;
-
-
-        
-
-
-    
-
-
 
 
     });

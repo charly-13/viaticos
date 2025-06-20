@@ -35,6 +35,7 @@ class ComprobantesgeneralesModel extends Mysql
 	public $strFechafactura;
 	public $intIdComprobante;
 	public $strComentario;
+	public $strTipo;
 
 	public function __construct()
 	{
@@ -318,7 +319,7 @@ public function selectSolicitudComprobante(int $viaticoid)
 	
 
 	
-	public function inserComprobantesViaticos(int $concepto, int $viaticoid, string $rutaxml, string $rutapdf, string $fecha, string $comentarios, string $uuid, string $rfcemisor , $subtotal, $total, $fechafactura)
+	public function inserComprobantesViaticos(int $concepto, int $viaticoid, string $rutaxml, string $rutapdf, string $fecha, string $comentarios, string $uuid, string $rfcemisor , $subtotal, $total, $fechafactura, string $tipo)
 	{
 
 		$return = 0;
@@ -333,6 +334,7 @@ public function selectSolicitudComprobante(int $viaticoid)
 		$this->strSubtotal = $subtotal;
 		$this->strTotal = $total;
 		$this->strFechafactura = $fechafactura;
+		$this->strTipo = $tipo;
 
 
 		// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
@@ -340,7 +342,7 @@ public function selectSolicitudComprobante(int $viaticoid)
 
 		// if(empty($request))
 		// {
-		$query_insert  = "INSERT INTO comprobantes_viaticos_generales(conceptoid,viaticoid,rutaxml,rutapdf,fecha,comentarios,uuid,rfcemisor,subtotal,total,fechafactura) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+		$query_insert  = "INSERT INTO comprobantes_viaticos_generales(conceptoid,viaticoid,rutaxml,rutapdf,fecha,comentarios,uuid,rfcemisor,subtotal,total,fechafactura,tipo) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 		$arrData = array(
 			$this->intConcepto,
 			$this->intViaticoid,
@@ -352,9 +354,15 @@ public function selectSolicitudComprobante(int $viaticoid)
 			$this->strRfcemisor,
 			$this->strSubtotal,
 			$this->strTotal,
-			$this->strFechafactura
+			$this->strFechafactura,
+			$this->strTipo 
 		);
+
+			
+
 		$request_insert = $this->insert($query_insert, $arrData);
+
+		
 		$return = $request_insert;
 		// }else{
 		// 	$return = "exist";

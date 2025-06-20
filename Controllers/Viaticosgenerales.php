@@ -38,11 +38,13 @@ class Viaticosgenerales extends Controllers
 
 				$intIdviatico = intval($_POST['idviatico']);
 				$intUsuarioid = intval($_POST['usuarioid']);
+				$intIdjefedirecto = intval($_POST['idjefedirecto']);
+				$intIdjefedirectosuperior = intval($_POST['idjefedirectosuperior']);
 				$strNombreusuario =  strClean($_POST['nombreusuario']);
 				$intlistCentrosCosto = intval($_POST['listCentrosCosto']);
 				$strFecha_salida =  strClean($_POST['fecha_salida']);
 				$strFecha_regreso =  strClean($_POST['fecha_regreso']);
-				$strMotivo =  strClean($_POST['motivo']);
+				$strMotivo =  strClean($_POST['motivo']); 
 				$strDescripcion =  strClean($_POST['txtDescripcion']);
 				$strLugardestino =  strClean($_POST['lugar_destino']);
 				$strFechacreacion = strClean($_POST['fechacreacion']);
@@ -67,7 +69,7 @@ class Viaticosgenerales extends Controllers
 					$codigoSolicitud = $this->model->generarCodigoSolicitud();
 
 					//Crear Viaticos
-					$request_viaticos = $this->model->insertViaticosgeneral($codigoSolicitud, $intUsuarioid, $strNombreusuario, $intlistCentrosCosto, $strFecha_salida, $strFecha_regreso, $strMotivo, $strDescripcion, $strLugardestino, $strFechacreacion, $intEstado, $intActualizadopor, $strTotal, $dias);
+					$request_viaticos = $this->model->insertViaticosgeneral($codigoSolicitud, $intUsuarioid, $intIdjefedirecto, $intIdjefedirectosuperior, $strNombreusuario, $intlistCentrosCosto, $strFecha_salida, $strFecha_regreso, $strMotivo, $strDescripcion, $strLugardestino, $strFechacreacion, $intEstado, $intActualizadopor, $strTotal, $dias);
 					//Crear detalle Viaticos
 					if ($request_viaticos) {
 						$request_detalle_viaticos = $this->model->insertDetalleViaticosgeneral($request_viaticos, $conceptosJson, $dias);
@@ -98,19 +100,11 @@ class Viaticosgenerales extends Controllers
 							);
 						}
 					}
-				} else {
-					//Actualizar
-
-
-					$request_viaticos = $this->model->updateCategoria($intIdviatico, $strCategoria, $strDescipcion, $imgPortada, $ruta, $intStatus);
-					$option = 2;
 				}
 				if ($request_viaticos > 0) {
 					if ($option == 1) {
 						$arrResponse = array('status' => true, 'msg' => 'Datos guardados correctamente.');
-					} else {
-						$arrResponse = array('status' => true, 'msg' => 'Datos Actualizados correctamente.');
-					}
+					} 
 				} else if ($request_viaticos == 'exist') {
 					$arrResponse = array('status' => false, 'msg' => '¡Atención! La categoría ya existe.');
 				} else {
@@ -308,6 +302,7 @@ class Viaticosgenerales extends Controllers
 				//$email_jefe_superior = strClean($_POST['email_jefe_superior']);
 
 				$email_jefe_superior = strClean('carlosbunti97@gmail.com');
+				//$email_compras = strClean("astrid.sebastian@ldrsolutions.com.mx");
 				$email_compras = strClean("carlosbunti97@gmail.com");
 
 				$request_viaticos = "";
@@ -506,120 +501,108 @@ class Viaticosgenerales extends Controllers
 	}
 
 
-	public function guardarComprobantess()
-	{
+public function guardarComprobantess()
+{
 
-		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-			$concepto = $_POST['concepto'] ?? '';
-				$viatico = $_POST['viatico'] ?? '';
-				$totalFacturas = $_POST['totalGastosFactura'] ?? '';
-			$comprobantes = $_POST['comprobantes'] ?? [];
-			$archivos = $_FILES;
+	// dep($_POST['comprobantes']);
+	// die();
+	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+		$concepto = $_POST['concepto'] ?? '';
+		$viatico = $_POST['viatico'] ?? '';
+		$totalFacturas = $_POST['totalGastosFactura'] ?? '';
+		$comprobantes = $_POST['comprobantes'] ?? [];
+		$archivos = $_FILES['comprobantes'] ?? [];
+		$respuesta = ['status' => false, 'message' => 'Error desconocido', 'debug' => []];
 
-			$respuesta = ['status' => false, 'message' => 'Error desconocido', 'debug' => []];
- 
-			if (!empty($concepto) && !empty($archivos['comprobantes']['name'])) {
-				$numComprobantes = count($archivos['comprobantes']['name']);
-				$respuesta['debug'][] = "Número de comprobantes recibidos: $numComprobantes";
+		if (!empty($concepto) && !empty($archivos)) {
 
-				for ($i = 0; $i < $numComprobantes; $i++) {
-					$fecha = $_POST['comprobantes'][$i]['fecha'] ?? null;
-					$comentario = $_POST['comprobantes'][$i]['comentario'] ?? '';
+			// ✅ Recorrer cada comprobante **por clave** en lugar de índice numérico
+			foreach ($comprobantes as $key => $comp) {
+				$fecha = $comp['fecha'] ?? null;
+				$tipo = $comp['tipo'] ?? '';
+				$comentario = $comp['comentario'] ?? '';
 
+				$uuid = $comp['uuid'] ?? '';
+				$rfcEmisor = $comp['rfcEmisor'] ?? '';
+				$rfcReceptor = $comp['rfcReceptor'] ?? '';
+				$subtotal = $comp['subtotal'] ?? '';
+				$total = $comp['total'] ?? '';
+				$fechaFactura = $comp['fechaFactura'] ?? '';
+				$fechaFacturaFormateada = date('Y-m-d H:i:s', strtotime($fechaFactura));
 
-					    $uuid = $_POST['comprobantes'][$i]['uuid'] ?? '';
-                $rfcEmisor = $_POST['comprobantes'][$i]['rfcEmisor'] ?? '';
-                $rfcReceptor = $_POST['comprobantes'][$i]['rfcReceptor'] ?? '';
-                $subtotal = $_POST['comprobantes'][$i]['subtotal'] ?? '';
-                $total = $_POST['comprobantes'][$i]['total'] ?? '';
-                $fechaFactura = $_POST['comprobantes'][$i]['fechaFactura'] ?? '';
+				// Archivos correspondientes
+				$xmlFileName = $archivos['name'][$key]['xml'] ?? null;
+				$xmlTmpName = $archivos['tmp_name'][$key]['xml'] ?? null;
+				$pdfFileName = $archivos['name'][$key]['pdf'] ?? null;
+				$pdfTmpName = $archivos['tmp_name'][$key]['pdf'] ?? null;
 
-				$fechaFacturaFormateada = date('Y-m-d H:i:s', strtotime($fechaFactura ));
+				$codigoAleatorio = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);
+				$fechaHora = date('Ymd_His');
+				$rutaXML = '';
+				$nombreArchivoXML = '';
 
-
-					$xmlFileName = $archivos['comprobantes']['name'][$i]['xml'] ?? null;
-					$xmlTmpName = $archivos['comprobantes']['tmp_name'][$i]['xml'] ?? null;
-
-					$pdfFileName = $archivos['comprobantes']['name'][$i]['pdf'] ?? null;
-					$pdfTmpName = $archivos['comprobantes']['tmp_name'][$i]['pdf'] ?? null;
-
-					
-
-					$codigoAleatorio = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);
-					$fechaHora = date('Ymd_His');
-
-					// Obtener extensión del archivo XML y PDF
+				if ($xmlTmpName && is_uploaded_file($xmlTmpName)) {
 					$extensionXML = pathinfo($xmlFileName, PATHINFO_EXTENSION);
-					//$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
+					$nombreArchivoXML = $viatico. '_' . $fechaHora . '_' . $codigoAleatorio . '.' . $extensionXML;
+					$rutaXML = 'Assets/uploads/xml/' . $nombreArchivoXML;
 
-					// Construir el nuevo nombre SIN el nombre original
-					$nombreArchivoXML = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionXML;
-					//$nombreArchivoPDF = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
-
-
-
-
-					$rutaXML = null;
-
-					if ($xmlTmpName && is_uploaded_file($xmlTmpName)) {
-						$rutaXML = 'Assets/uploads/xml/' . $nombreArchivoXML;
-						if (!move_uploaded_file($xmlTmpName, $rutaXML)) {
-							$respuesta['message'] = "Error al mover el archivo XML para comprobante $i";
-							echo json_encode($respuesta);
-							exit;
-						}
-					} else {
-						$respuesta['message'] = "Falta o no es válido el archivo XML para comprobante $i";
+					if (!move_uploaded_file($xmlTmpName, $rutaXML)) {
+						$respuesta['message'] = "Error al mover el archivo XML para comprobante $key";
 						echo json_encode($respuesta);
 						exit;
 					}
+				} else {
+					$respuesta['message'] = "Falta o no es válido el archivo XML para comprobante $key";
+					echo json_encode($respuesta);
+					exit;
+				}
 
-					$rutaPDF = '';
-					$nombreArchivoPDF='';
-					if ($pdfTmpName && is_uploaded_file($pdfTmpName)) {
-						//$rutaPDF = 'Assets/uploads/pdf/' . uniqid() . '_' . basename($pdfFileName);
-						$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
-					$rutaPDF = 'Assets/uploads/pdf/' . $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
-					$nombreArchivoPDF = $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
-					//$nombreArchivoPDF =  $nombreArchivoPDF;
-						if (!move_uploaded_file($pdfTmpName, $rutaPDF)) {
-							$respuesta['message'] = "Error al mover el archivo PDF para comprobante $i";
-							echo json_encode($respuesta);
-							exit;
-						}
-					}
+				$rutaPDF = '';
+				$nombreArchivoPDF = '';
+				if ($pdfTmpName && is_uploaded_file($pdfTmpName)) {
+					$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
+					$nombreArchivoPDF = $viatico. '_' .$fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
+					$rutaPDF = 'Assets/uploads/pdf/' . $nombreArchivoPDF;
 
-					// Guardar en la base de datos:
-					try { 
-						$insertId = $this->model->inserComprobantesViaticos($concepto, $viatico, $nombreArchivoXML, $nombreArchivoPDF, $fecha, $comentario, $uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada);
-
-						if ($insertId) {
-							$respuesta['debug'][] = "Comprobante $i guardado en BD con ID $insertId";
-
-								// Nuevo insert relacionado con el comprobante guardado
-	                          
-						} else {
-							$respuesta['message'] = "Error al guardar comprobante $i en BD";
-							echo json_encode($respuesta);
-							exit;
-						}
-					} catch (Exception $e) {
-						$respuesta['message'] = "Error al guardar comprobante $i en BD: " . $e->getMessage();
+					if (!move_uploaded_file($pdfTmpName, $rutaPDF)) {
+						$respuesta['message'] = "Error al mover el archivo PDF para comprobante $key";
 						echo json_encode($respuesta);
 						exit;
 					}
 				}
 
-				//  Este insert lo hacemos **solo una vez**, después de guardar todos los comprobantes
-	            $this->model->insertTotalesFactura($concepto, $viatico, $totalFacturas);
+				// Guardar en la BD
+				try {
+					$insertId = $this->model->inserComprobantesViaticos(
+						$concepto, $viatico, $nombreArchivoXML, $nombreArchivoPDF, $fecha, $comentario,
+						$uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada, $tipo
+					);
 
-                 $this->model->updateConceptoComprobante($concepto);
-				echo json_encode(['status' => true, 'msg' => 'Datos guardados correctamente.']);
-			} else {
-				$respuesta['message'] = "Datos incompletos o no se enviaron archivos";
-				echo json_encode($respuesta);
-				exit;
+					if ($insertId) {
+						$respuesta['debug'][] = "Comprobante $key guardado en BD con ID $insertId";
+					} else {
+						$respuesta['message'] = "Error al guardar comprobante $key en BD";
+						echo json_encode($respuesta);
+						exit;
+					}
+				} catch (Exception $e) {
+					$respuesta['message'] = "Error al guardar comprobante $key en BD: " . $e->getMessage();
+					echo json_encode($respuesta);
+					exit;
+				}
 			}
+
+			// ✅ Guardamos los totales y actualizamos concepto solo UNA VEZ
+			$this->model->insertTotalesFactura($concepto, $viatico, $totalFacturas);
+			$this->model->updateConceptoComprobante($concepto);
+
+			echo json_encode(['status' => true, 'msg' => 'Datos guardados correctamente.']);
+		} else {
+			$respuesta['message'] = "Datos incompletos o no se enviaron archivos";
+			echo json_encode($respuesta);
+			exit;
 		}
 	}
+}
+
 }

@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="modalFormAddComprobantes" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable" >
+  <div class="modal-dialog modal-xl-custom modal-dialog-scrollable" >
     <div class="modal-content">
       <div class="modal-header headerRegister">
         <h5 class="modal-title" id="titleModalComprobante">Nueva Categoría</h5>
@@ -20,10 +20,7 @@
    
             </form>
       </div>
-                 <!-- <div class="tile-footer">
-                <button id="btnActionForm" class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i><span id="btnText">Guardar Comprobantes</span></button>&nbsp;&nbsp;&nbsp;
-                <button class="btn btn-danger" type="button" data-dismiss="modal"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cerrar</button>
-              </div> -->
+  
 
             <div class="modal-footer bg-light d-flex justify-content-between align-items-center">
   <div id="resumenTotalGastos" class="fw-bold text-primary fs-5" style="color:#d16032; font-size:1.25rem;">Total: $0.00</div>

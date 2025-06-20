@@ -1,8 +1,8 @@
 <?php headerAdmin($data);
 
-// echo '<pre>';
-// print_r($_SESSION['userData']);
-// echo '</pre>';
+echo '<pre>';
+print_r($_SESSION['userData']);
+echo '</pre>';
 ?>
     
 
@@ -20,42 +20,8 @@
        
 
  
-        <?php if(!empty($_SESSION['permisos'][3]['r'])){ ?>
-        <div class="col-md-6 col-lg-3">
-          <a href="<?= base_url() ?>/clientes" class="linkw">
-            <div class="widget-small info coloured-icon"><i class="icon fa fa-user fa-3x"></i>
-              <div class="info">
-                <h4>Clientes</h4>
-                <p><b><?= $data['clientes'] ?></b></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <?php } ?>
-        <?php if(!empty($_SESSION['permisos'][4]['r']) ){ ?>
-        <div class="col-md-6 col-lg-3">
-          <a href="<?= base_url() ?>/productos" class="linkw">
-            <div class="widget-small warning coloured-icon"><i class="icon fa fa fa-archive fa-3x"></i>
-              <div class="info">
-                <h4>Productos</h4>
-                <p><b><?= $data['productos'] ?></b></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <?php } ?>
-        <?php if(!empty($_SESSION['permisos'][5]['r'])){ ?>
-        <div class="col-md-6 col-lg-3">
-          <a href="<?= base_url() ?>/pedidos" class="linkw">
-            <div class="widget-small danger coloured-icon"><i class="icon fa fa-shopping-cart fa-3x"></i>
-              <div class="info">
-                <h4>Pedidos</h4>
-                <p><b><?= $data['pedidos'] ?></b></p>
-              </div>
-            </div>
-          </a>
-        </div>
-        <?php } ?>
+
+
       </div>
 
 
@@ -67,9 +33,9 @@
   <div class="row">
     <div class="col-md-6">
       <div class="tile" onclick="abrirModalYRedirigir()">
-        <h3 class="tile-title">Viáticos Generales</h3>
+        <!-- <h3 class="tile-title">Viáticos Generales</h3> -->
         <div class="image-container">
-      <img src="<?= media() ?>/images/vuelos.jpg" alt="Imagen 2"  >
+      <img src="<?= media() ?>/images/viaticos.png" alt="Imagen 2"  >
         </div>
       </div>
     </div>
@@ -77,9 +43,9 @@
 
   <div class="col-md-6">
     <div class="tile">
-      <h3 class="tile-title">Vuelos y Hoteles</h3>
+      <!-- <h3 class="tile-title">Vuelos y Hoteles</h3> -->
       <div class="image-container">
-        <img src="<?= media() ?>/images/vuelos.jpg" alt="Imagen 2"  >
+                <img src="<?= media() ?>/images/vuelos.png" alt="Imagen 2"  >
       </div>
     </div>
   </div>

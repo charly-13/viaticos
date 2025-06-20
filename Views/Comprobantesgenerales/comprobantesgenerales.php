@@ -34,7 +34,7 @@
                           <th>Fecha Salida</th>
                           <th>Fecha Regreso</th>
                           <th>Centro de Costo</th>
-                          <th>Total</th>
+                          <th>Monto Solicitado</th>
                           <th>Estado</th>
                           <th class="col-opciones">Acciones</th>
                         </tr>

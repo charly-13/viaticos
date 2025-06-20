@@ -46,6 +46,14 @@
 	//DATOS FISCALES EMPRESA
 
     const RFC = "BCD161025T59";
+
+	//USUARIO DE POSVENTA
+	//jennifer.rea@ldrsolutions.com.mx    Y#85J*
+	//https://pratikborsadiya.in/vali-admin/bootstrap-components.html
+
+	///DIRECTOR
+
+	//roberto.talavera@ldrsolutions.com.mx   K37J54
 	
 
  ?>

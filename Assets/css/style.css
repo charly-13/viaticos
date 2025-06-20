@@ -312,7 +312,7 @@
   }
 
   .image-container img {
-    width: 70%;
+    width: 50%;
     max-width: 100%;
     height: auto;
     transition: transform 0.5s ease;
@@ -461,7 +461,7 @@
 
   .bg-section strong {
     color: #e97e2e;
-    font-size: 1.1rem;
+    font-size: 1.5rem;
   }
 
   .form-label {
@@ -753,3 +753,30 @@
     background-color: #ccc;
     border-radius: 4px;
   } */
+
+    .legend-box {
+    background: #fff8f0;
+    border-left: 4px solid var(--color-primario);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .datos-xml {
+    background: #f8f9fa;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    color: #333;
+  }
+
+  .table th {
+    background-color: #f5f5f5;
+    color: #333;
+  }
+
+  /* #contenedorDias tbody tr:nth-child(odd) {
+  background-color: rgba(233, 126, 46, 0.1); /* Naranja suave */
+} */

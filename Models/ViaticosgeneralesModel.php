@@ -27,6 +27,7 @@ class ViaticosgeneralesModel extends Mysql
 	public $strTotal;
 	public $intDias;
 	public $strComentarios;
+	public $strRutaDestino;
 	public $intConcepto;
 	public $intConceptoid;
 	public $strRutaxml;
@@ -361,17 +362,19 @@ class ViaticosgeneralesModel extends Mysql
 
 		
 
-			public function gestionCompras(int $dviatico , int $estado, string $comentariosCompras)
+			public function gestionCompras(int $dviatico , int $estado, string $comentariosCompras, string $rutadestino)
 	{
 		$this->intViaticoid = $dviatico ;
 		$this->intEstado = $estado;
 		$this->strComentarios = $comentariosCompras;
+		$this->strRutaDestino = $rutadestino;
 
 
-			$sql = "UPDATE viaticos_generales SET estado = ?, comentarioscompras = ?,  fechacompras = NOW() WHERE idviatico = $this->intViaticoid ";
+			$sql = "UPDATE viaticos_generales SET estado = ?, comentarioscompras = ?,  fechacompras = NOW(),  rutadestino = ? WHERE idviatico = $this->intViaticoid ";
 			$arrData = array(
 				$this->intEstado,
-				$this->strComentarios
+				$this->strComentarios,
+				$this->strRutaDestino
 			);
 			$request = $this->update($sql, $arrData);
 

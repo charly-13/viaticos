@@ -11,7 +11,7 @@
       <div class="modal-body">
             <form id="formViaticoAprobacionCompras" name="formViaticoAprobacionCompras" class="form-horizontal">
             <input type="hidden" id="idviatico_comp" name="idviatico_comp">
-                 <input type="hidden" id="correo_solicitante_comp" name="correo_solicitante_comp">
+                 <input type="text" id="correo_solicitante_comp" name="correo_solicitante_comp">
             <!-- <input type="text" id="email_jefe_superior" name="email_jefe_superior"> -->
               <p class="text-primary">Los campos con asterisco (<span class="required">*</span>) son obligatorios.</p>
               <div class="row">
@@ -25,6 +25,12 @@
                          <!-- <option value="9">Rechazar</option> -->
                         </select>
                     </div> 
+
+                    <div class="form-group">
+  <label for="comprobante_pago" class="form-label">Subir Comprobante de Pago (PDF o Imagen)</label>
+  <input class="form-control" type="file" id="comprobante_pago" name="comprobante_pago" accept=".pdf,.jpg,.jpeg,.png" required>
+  <div class="form-text">Formatos permitidos: PDF, JPG, PNG</div>
+</div>
 
                     <div class="form-group">
                       <label class="control-label">Comentarios <span class="required">*</span></label>

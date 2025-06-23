@@ -1,6 +1,9 @@
 <?php headerAdmin($data);
 
 
+//             echo '<pre>';
+// print_r($_SESSION['userData']);
+// echo '</pre>';
 
 ?>
 
@@ -36,17 +39,14 @@
           <tbody>
             <?php
 
-            echo '<pre>';
-print_r($_SESSION['userData']);
-echo '</pre>';
             if (count($data['solicitudesPendientes']) > 0) {
-              foreach ($data['solicitudesPendientes'] as $pedido) {
+              foreach ($data['solicitudesPendientes'] as $solicitud) {
             ?>
                 <tr>
-                  <td><?= $pedido['codigo_solicitud'] ?></td>
-                  <td><?= $pedido['correo'] ?></td>
-                  <td><?= $pedido['total'] ?></td>
-                  <td><a href="<?= base_url() ?>/viaticosgenerales/solicitud/<?= $pedido['idviatico'] ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                  <td><?= $solicitud['codigo_solicitud'] ?></td>
+                  <td><?= $solicitud['correo'] ?></td>
+                  <td><?= formatMoney($solicitud['total']) ?></td>
+                  <td><a href="<?= base_url() ?>/viaticosgenerales/solicitud/<?= $solicitud['idviatico'] ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                 </tr>
               <?php
               }
@@ -67,27 +67,41 @@ echo '</pre>';
     <div class="col-md-6">
       <div class="tile">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h3 class="tile-title mb-0">Últimas solicitudes generadas</h3>
+          <h3 class="tile-title mb-0">Solicitudes por área</h3>
           <a href="<?= base_url() ?>/ruta-todas-solicitudes" class="btn btn-sm btn-outline-primary ">Ver todas</a>
         </div>
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Cliente</th>
-              <th>Estado</th>
-              <th class="text-right">Monto</th>
-              <th></th>
+           <th>FOLIO</th>
+              <th>Solicita</th>
+              <th>Total</th>
+
+              <th></th> 
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1001</td>
-              <td></td>
-              <td></td>
-              <td class="text-right"></td>
-              <td><a href="" target="_blank"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
-            </tr>
+            <?php
+
+            if (count($data['solicitudesPorArea']) > 0) {
+              foreach ($data['solicitudesPorArea'] as $solicitud) {
+            ?>
+                <tr>
+                  <td><?= $solicitud['codigo_solicitud'] ?></td>
+                  <td><?= $solicitud['correo'] ?></td>
+                  <td><?= formatMoney($solicitud['total']) ?></td>
+                  <td><a href="<?= base_url() ?>/viaticosgenerales/solicitud/<?= $solicitud['idviatico'] ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                </tr>
+              <?php
+              }
+            } else {
+              ?>
+              <tr>
+                <td colspan="4" class="text-center">No hay solicitudes.</td>
+              </tr>
+            <?php
+            }
+            ?>
           </tbody>
         </table>
       </div>

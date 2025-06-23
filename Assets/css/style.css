@@ -335,10 +335,10 @@
     }
 
 	.col-opciones {
-    width: 100px; /* Ajusta según lo necesario */
-    min-width: 80px;
-    max-width: 100px;
-    text-align: center; /* Opcional: centra los botones */
+    width: 100px!important; /* Ajusta según lo necesario */
+    min-width: 80px!important;
+    max-width: 100px!important;
+    text-align: center!important; /* Opcional: centra los botones */
     white-space: nowrap; /* Evita saltos de línea */
 }
 
@@ -795,4 +795,7 @@
 
   /* #contenedorDias tbody tr:nth-child(odd) {
   background-color: rgba(233, 126, 46, 0.1); /* Naranja suave */
- */
+     .btn-xs-c {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+    }

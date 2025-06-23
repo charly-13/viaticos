@@ -63,7 +63,12 @@
 
 	//S EQUEDA PENDIENTE REVISAR LOS PERFILES Y ACCESOS A BOTONES DE QUIEN AUTORIZA LAS SOLICITUDES Y HACER TEST SOBRE STO.
 
+//	astrid.sebastian@ldrsolutions.com.mx    W17X85
 
+//daniella.silva@ldrsolutions.com.mx  U28I49  ASISTEMTE DE RAUL TELLES
+
+
+//mario.lopez@ldrsolutions.com.mx  H87G47
 	
 
  ?>

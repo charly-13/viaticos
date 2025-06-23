@@ -11,7 +11,7 @@
       <div class="modal-body">
             <form id="formViaticoAprobacionJefaturaSuperior" name="formViaticoAprobacionJefaturaSuperior" class="form-horizontal">
             <input type="hidden" id="idviaticoap" name="idviaticoap">
-                 <input type="hidden" id="correo_solicitante_aprob_final" name="correo_solicitante_aprob_final">
+                 <input type="text" id="correo_solicitante_aprob_final" name="correo_solicitante_aprob_final">
             <!-- <input type="text" id="email_jefe_superior" name="email_jefe_superior"> -->
               <p class="text-primary">Los campos con asterisco (<span class="required">*</span>) son obligatorios.</p>
               <div class="row">

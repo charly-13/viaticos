@@ -44,7 +44,7 @@ class Viaticosgenerales extends Controllers
 				$intlistCentrosCosto = intval($_POST['listCentrosCosto']);
 				$strFecha_salida =  strClean($_POST['fecha_salida']);
 				$strFecha_regreso =  strClean($_POST['fecha_regreso']);
-				$strMotivo =  strClean($_POST['motivo']); 
+				$strMotivo =  strClean($_POST['motivo']);
 				$strDescripcion =  strClean($_POST['txtDescripcion']);
 				$strLugardestino =  strClean($_POST['lugar_destino']);
 				$strFechacreacion = strClean($_POST['fechacreacion']);
@@ -104,7 +104,7 @@ class Viaticosgenerales extends Controllers
 				if ($request_viaticos > 0) {
 					if ($option == 1) {
 						$arrResponse = array('status' => true, 'msg' => 'Datos guardados correctamente.');
-					} 
+					}
 				} else if ($request_viaticos == 'exist') {
 					$arrResponse = array('status' => false, 'msg' => '¡Atención! La categoría ya existe.');
 				} else {
@@ -149,6 +149,7 @@ class Viaticosgenerales extends Controllers
 
 
 			// Botones
+			
 			$btnView = '<a title="Ver Detalle" href="' . base_url() . '/viaticosgenerales/solicitud/' . $arrData[$i]['idviatico'] . '"  class="btn btn-info btn-sm"> <i class="far fa-eye"></i> </a>';
 
 			$btnComprobante = '<a title="Comprobantes" href="' . base_url() . '/viaticosgenerales/comprobantes/' . $arrData[$i]['idviatico'] . '"  class="btn btn-danger btn-sm"> <i class="fas fa-file-pdf"></i> </a>';
@@ -196,7 +197,7 @@ class Viaticosgenerales extends Controllers
 			header("Location:" . base_url() . '/viaticosgenerales');
 		}
 
- 
+
 
 		$idpersona = $_SESSION['userData']['id_usuario'];
 		// dep($idpersona);
@@ -298,7 +299,8 @@ class Viaticosgenerales extends Controllers
 				$intIdviatico = intval($_POST['idviaticoap']);
 				$intEstatus = intval($_POST['listStatusap']);
 				$strComentarios = strClean($_POST['txtComentariosap']);
-				$correo_solicitante = strClean($_POST['correo_solicitante_aprob_final']);
+				//$correo_solicitante = strClean($_POST['correo_solicitante_aprob_final']);
+				$correo_solicitante = strClean('webmaster.ccc@hotmail.com');
 				//$email_jefe_superior = strClean($_POST['email_jefe_superior']);
 
 				$email_jefe_superior = strClean('carlosbunti97@gmail.com');
@@ -372,6 +374,9 @@ class Viaticosgenerales extends Controllers
 				$arrResponse = array("status" => false, "msg" => 'Datos incorrectos.');
 			} else {
 
+
+
+
 				$intIdviatico = intval($_POST['idviatico_comp']);
 				$intEstatus = intval($_POST['listStatus_comp']);
 				$strComentarios = strClean($_POST['txtComentarios_comp']);
@@ -385,52 +390,85 @@ class Viaticosgenerales extends Controllers
 
 				//Actualizar
 
-				$request_viaticos = $this->model->gestionCompras($intIdviatico, $intEstatus, $strComentarios);
 
+				if (isset($_FILES['comprobante_pago']) && $_FILES['comprobante_pago']['error'] == 0) {
 
-				$url_recovery = base_url() . '/viaticosgenerales/solicitud/' . $request_viaticos;
-				$respuestaCompras = "";
-				$asunto = "";
-				if ($intEstatus == 10) {
-					$asunto = "Solicitud Finalizada";
-					$respuestaCompras = "Te informamos que tu <strong>solicitud de viáticos</strong> ha sido gestionada por el área de compras.</p> <p>¡Te deseamos un excelente viaje! Recuerda que al regresar deberás adjuntar las facturas correspondientes a cada rubro solicitado.";
-				} else if ($intEstatus == 9) {
-					$asunto = "Solicitud de viáticos no aprobada";
-					$respuestaCompras = "Te informamos que tu solicitud de viáticos no fue aprobada por tu jefe superior, por lo que el proceso ha sido detenido.";
-				}
+					$codigoAleatorio = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);
+					$fechaHora = date('Ymd_His');
 
-				if ($request_viaticos > 0) {
+					$extensionArchivo = pathinfo($_FILES['comprobante_pago']['name'], PATHINFO_EXTENSION);
+					$nombreNuevoArchivo = $intIdviatico. '_' .$fechaHora . '_' . $codigoAleatorio . '.' . $extensionArchivo;
 
-					$correos_copias = "carloscc_1997@outlook.com";
-
-					$dataSolicitante = array(
-						'email' => $correo_solicitante,
-						'asunto' => $asunto,
-						'respuesta' => $respuestaCompras,
-						'area' => 'Solicitante',
-						'url_recovery' => $url_recovery
-					);
-
-
-					$sendEmail = sendMailLocal($dataSolicitante, 'mail_respuesta_solicitud_usuario', $correos_copias);
-
-					if ($sendEmail) {
-						if ($intEstatus == 10) {
-							$arrResponse = array('status' => true, 'msg' => 'El solicitante ha sido notificado sobre la aprobación de su solicitud. ¡Gracias!');
-
-							// 	$dataSolicituCompras = array(
-							// 	'email' => $email_compras,
-							// 	'asunto' => 'Solicitud de aprobación de viáticos aprobada',
-							// 	'area' => 'compas',
-							// 	'url_recovery' => $url_recovery
-							// );
-							// 		 $sendEmail = sendMailLocal($dataSolicituCompras, 'mail_solicitud_compras', $correos_copias);
-						} else {
-							$arrResponse = array('status' => true, 'msg' => 'El solicitante ha sido notificado por correo sobre el rechazo de su solicitud!');
-						}
+					$directorio = 'Assets/uploads/comprobantes/';
+					if (!file_exists($directorio)) {
+						mkdir($directorio, 0777, true);
 					}
-				} else {
-					$arrResponse = array("status" => false, "msg" => 'No es posible enviar tu información.');
+
+					$rutaDestino = $directorio . $nombreNuevoArchivo;
+					$tmpArchivo = $_FILES['comprobante_pago']['tmp_name'];
+
+					if (is_uploaded_file($tmpArchivo)) {
+						if (!move_uploaded_file($tmpArchivo, $rutaDestino)) {
+							$arrResponse = array("status" => false, "msg" => "Error al mover el comprobante de pago.");
+							echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+							die();
+						}
+
+						// Guardar en base de datos la ruta del archivo
+						//$this->model->guardarRutaComprobante($intIdviatico, $rutaDestino);
+
+						$request_viaticos = $this->model->gestionCompras($intIdviatico, $intEstatus, $strComentarios, $nombreNuevoArchivo);
+
+
+						$url_recovery = base_url() . '/viaticosgenerales/solicitud/' . $request_viaticos;
+						$respuestaCompras = "";
+						$asunto = "";
+						if ($intEstatus == 10) {
+							$asunto = "Solicitud Finalizada";
+							$respuestaCompras = "Te informamos que tu <strong>solicitud de viáticos</strong> ha sido gestionada por el área de compras.</p> <p>¡Te deseamos un excelente viaje! Recuerda que al regresar deberás adjuntar las facturas correspondientes a cada rubro solicitado.";
+						} else if ($intEstatus == 9) {
+							$asunto = "Solicitud de viáticos no aprobada";
+							$respuestaCompras = "Te informamos que tu solicitud de viáticos no fue aprobada por tu jefe superior, por lo que el proceso ha sido detenido.";
+						}
+
+						if ($request_viaticos > 0) {
+
+							$correos_copias = "carloscc_1997@outlook.com";
+
+							$dataSolicitante = array(
+								'email' => $correo_solicitante,
+								'asunto' => $asunto,
+								'respuesta' => $respuestaCompras,
+								'area' => 'Solicitante',
+								'url_recovery' => $url_recovery
+							);
+
+
+							$sendEmail = sendMailLocal($dataSolicitante, 'mail_respuesta_solicitud_usuario', $correos_copias);
+
+							if ($sendEmail) {
+								if ($intEstatus == 10) {
+									$arrResponse = array('status' => true, 'msg' => 'El solicitante ha sido notificado sobre la aprobación de su solicitud. ¡Gracias!');
+
+									// 	$dataSolicituCompras = array(
+									// 	'email' => $email_compras,
+									// 	'asunto' => 'Solicitud de aprobación de viáticos aprobada',
+									// 	'area' => 'compas',
+									// 	'url_recovery' => $url_recovery
+									// );
+									// 		 $sendEmail = sendMailLocal($dataSolicituCompras, 'mail_solicitud_compras', $correos_copias);
+								} else {
+									$arrResponse = array('status' => true, 'msg' => 'El solicitante ha sido notificado por correo sobre el rechazo de su solicitud!');
+								}
+							}
+						} else {
+							$arrResponse = array("status" => false, "msg" => 'No es posible enviar tu información.');
+						}
+					} else {
+						$arrResponse = array("status" => false, "msg" => "Archivo no válido o no subido correctamente.");
+						echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
+						die();
+					}
 				}
 			}
 			echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
@@ -501,108 +539,117 @@ class Viaticosgenerales extends Controllers
 	}
 
 
-public function guardarComprobantess()
-{
+	public function guardarComprobantess()
+	{
 
-	// dep($_POST['comprobantes']);
-	// die();
-	if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-		$concepto = $_POST['concepto'] ?? '';
-		$viatico = $_POST['viatico'] ?? '';
-		$totalFacturas = $_POST['totalGastosFactura'] ?? '';
-		$comprobantes = $_POST['comprobantes'] ?? [];
-		$archivos = $_FILES['comprobantes'] ?? [];
-		$respuesta = ['status' => false, 'message' => 'Error desconocido', 'debug' => []];
+		// dep($_POST['comprobantes']);
+		// die();
+		if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			$concepto = $_POST['concepto'] ?? '';
+			$viatico = $_POST['viatico'] ?? '';
+			$totalFacturas = $_POST['totalGastosFactura'] ?? '';
+			$comprobantes = $_POST['comprobantes'] ?? [];
+			$archivos = $_FILES['comprobantes'] ?? [];
+			$respuesta = ['status' => false, 'message' => 'Error desconocido', 'debug' => []];
 
-		if (!empty($concepto) && !empty($archivos)) {
+			if (!empty($concepto) && !empty($archivos)) {
 
-			// ✅ Recorrer cada comprobante **por clave** en lugar de índice numérico
-			foreach ($comprobantes as $key => $comp) {
-				$fecha = $comp['fecha'] ?? null;
-				$tipo = $comp['tipo'] ?? '';
-				$comentario = $comp['comentario'] ?? '';
+				// ✅ Recorrer cada comprobante **por clave** en lugar de índice numérico
+				foreach ($comprobantes as $key => $comp) {
+					$fecha = $comp['fecha'] ?? null;
+					$tipo = $comp['tipo'] ?? '';
+					$comentario = $comp['comentario'] ?? '';
 
-				$uuid = $comp['uuid'] ?? '';
-				$rfcEmisor = $comp['rfcEmisor'] ?? '';
-				$rfcReceptor = $comp['rfcReceptor'] ?? '';
-				$subtotal = $comp['subtotal'] ?? '';
-				$total = $comp['total'] ?? '';
-				$fechaFactura = $comp['fechaFactura'] ?? '';
-				$fechaFacturaFormateada = date('Y-m-d H:i:s', strtotime($fechaFactura));
+					$uuid = $comp['uuid'] ?? '';
+					$rfcEmisor = $comp['rfcEmisor'] ?? '';
+					$rfcReceptor = $comp['rfcReceptor'] ?? '';
+					$subtotal = $comp['subtotal'] ?? '';
+					$total = $comp['total'] ?? '';
+					$fechaFactura = $comp['fechaFactura'] ?? '';
+					$fechaFacturaFormateada = date('Y-m-d H:i:s', strtotime($fechaFactura));
 
-				// Archivos correspondientes
-				$xmlFileName = $archivos['name'][$key]['xml'] ?? null;
-				$xmlTmpName = $archivos['tmp_name'][$key]['xml'] ?? null;
-				$pdfFileName = $archivos['name'][$key]['pdf'] ?? null;
-				$pdfTmpName = $archivos['tmp_name'][$key]['pdf'] ?? null;
+					// Archivos correspondientes
+					$xmlFileName = $archivos['name'][$key]['xml'] ?? null;
+					$xmlTmpName = $archivos['tmp_name'][$key]['xml'] ?? null;
+					$pdfFileName = $archivos['name'][$key]['pdf'] ?? null;
+					$pdfTmpName = $archivos['tmp_name'][$key]['pdf'] ?? null;
 
-				$codigoAleatorio = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);
-				$fechaHora = date('Ymd_His');
-				$rutaXML = '';
-				$nombreArchivoXML = '';
+					$codigoAleatorio = substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 5);
+					$fechaHora = date('Ymd_His');
+					$rutaXML = '';
+					$nombreArchivoXML = '';
 
-				if ($xmlTmpName && is_uploaded_file($xmlTmpName)) {
-					$extensionXML = pathinfo($xmlFileName, PATHINFO_EXTENSION);
-					$nombreArchivoXML = $viatico. '_' . $fechaHora . '_' . $codigoAleatorio . '.' . $extensionXML;
-					$rutaXML = 'Assets/uploads/xml/' . $nombreArchivoXML;
+					if ($xmlTmpName && is_uploaded_file($xmlTmpName)) {
+						$extensionXML = pathinfo($xmlFileName, PATHINFO_EXTENSION);
+						$nombreArchivoXML = $viatico . '_' . $fechaHora . '_' . $codigoAleatorio . '.' . $extensionXML;
+						$rutaXML = 'Assets/uploads/xml/' . $nombreArchivoXML;
 
-					if (!move_uploaded_file($xmlTmpName, $rutaXML)) {
-						$respuesta['message'] = "Error al mover el archivo XML para comprobante $key";
-						echo json_encode($respuesta);
-						exit;
-					}
-				} else {
-					$respuesta['message'] = "Falta o no es válido el archivo XML para comprobante $key";
-					echo json_encode($respuesta);
-					exit;
-				}
-
-				$rutaPDF = '';
-				$nombreArchivoPDF = '';
-				if ($pdfTmpName && is_uploaded_file($pdfTmpName)) {
-					$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
-					$nombreArchivoPDF = $viatico. '_' .$fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
-					$rutaPDF = 'Assets/uploads/pdf/' . $nombreArchivoPDF;
-
-					if (!move_uploaded_file($pdfTmpName, $rutaPDF)) {
-						$respuesta['message'] = "Error al mover el archivo PDF para comprobante $key";
-						echo json_encode($respuesta);
-						exit;
-					}
-				}
-
-				// Guardar en la BD
-				try {
-					$insertId = $this->model->inserComprobantesViaticos(
-						$concepto, $viatico, $nombreArchivoXML, $nombreArchivoPDF, $fecha, $comentario,
-						$uuid, $rfcEmisor, $subtotal, $total, $fechaFacturaFormateada, $tipo
-					);
-
-					if ($insertId) {
-						$respuesta['debug'][] = "Comprobante $key guardado en BD con ID $insertId";
+						if (!move_uploaded_file($xmlTmpName, $rutaXML)) {
+							$respuesta['message'] = "Error al mover el archivo XML para comprobante $key";
+							echo json_encode($respuesta);
+							exit;
+						}
 					} else {
-						$respuesta['message'] = "Error al guardar comprobante $key en BD";
+						$respuesta['message'] = "Falta o no es válido el archivo XML para comprobante $key";
 						echo json_encode($respuesta);
 						exit;
 					}
-				} catch (Exception $e) {
-					$respuesta['message'] = "Error al guardar comprobante $key en BD: " . $e->getMessage();
-					echo json_encode($respuesta);
-					exit;
+
+					$rutaPDF = '';
+					$nombreArchivoPDF = '';
+					if ($pdfTmpName && is_uploaded_file($pdfTmpName)) {
+						$extensionPDF = pathinfo($pdfFileName, PATHINFO_EXTENSION);
+						$nombreArchivoPDF = $viatico . '_' . $fechaHora . '_' . $codigoAleatorio . '.' . $extensionPDF;
+						$rutaPDF = 'Assets/uploads/pdf/' . $nombreArchivoPDF;
+
+						if (!move_uploaded_file($pdfTmpName, $rutaPDF)) {
+							$respuesta['message'] = "Error al mover el archivo PDF para comprobante $key";
+							echo json_encode($respuesta);
+							exit;
+						}
+					}
+
+					// Guardar en la BD
+					try {
+						$insertId = $this->model->inserComprobantesViaticos(
+							$concepto,
+							$viatico,
+							$nombreArchivoXML,
+							$nombreArchivoPDF,
+							$fecha,
+							$comentario,
+							$uuid,
+							$rfcEmisor,
+							$subtotal,
+							$total,
+							$fechaFacturaFormateada,
+							$tipo
+						);
+
+						if ($insertId) {
+							$respuesta['debug'][] = "Comprobante $key guardado en BD con ID $insertId";
+						} else {
+							$respuesta['message'] = "Error al guardar comprobante $key en BD";
+							echo json_encode($respuesta);
+							exit;
+						}
+					} catch (Exception $e) {
+						$respuesta['message'] = "Error al guardar comprobante $key en BD: " . $e->getMessage();
+						echo json_encode($respuesta);
+						exit;
+					}
 				}
+
+				// ✅ Guardamos los totales y actualizamos concepto solo UNA VEZ
+				$this->model->insertTotalesFactura($concepto, $viatico, $totalFacturas);
+				$this->model->updateConceptoComprobante($concepto);
+
+				echo json_encode(['status' => true, 'msg' => 'Datos guardados correctamente.']);
+			} else {
+				$respuesta['message'] = "Datos incompletos o no se enviaron archivos";
+				echo json_encode($respuesta);
+				exit;
 			}
-
-			// ✅ Guardamos los totales y actualizamos concepto solo UNA VEZ
-			$this->model->insertTotalesFactura($concepto, $viatico, $totalFacturas);
-			$this->model->updateConceptoComprobante($concepto);
-
-			echo json_encode(['status' => true, 'msg' => 'Datos guardados correctamente.']);
-		} else {
-			$respuesta['message'] = "Datos incompletos o no se enviaron archivos";
-			echo json_encode($respuesta);
-			exit;
 		}
 	}
-}
-
 }

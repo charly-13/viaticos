@@ -1,9 +1,12 @@
 function openModal(idviatico) {
 
-    console.log(userData.email_usuario);
+   // console.log(userData.email_usuario);
+
+     const emailSolicitante = document.querySelector('#email_solicitante').textContent.trim();
+      document.querySelector('#correo_solicitante').value = emailSolicitante; // Aquí asignamos el correo
     //document.querySelector("#formViaticoAprobacionuno").reset();
     document.querySelector('#idviatico').value = idviatico;
-    document.querySelector('#correo_solicitante').value = userData.email_usuario;
+    //document.querySelector('#correo_solicitante').value = userData.email_usuario;
     document.querySelector('#email_jefe_superior').value = userData.email_jefe_superior;
     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
     document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
@@ -38,7 +41,7 @@ formViaticoAprobacionuno.onsubmit = function (e) {
             let objData = JSON.parse(request.responseText);
             if (objData.status) {
 
-                //tableViaticos.api().ajax.reload();
+                //tableViaticos.api().ajax.reload(); 
                 $('#modalFormValidacionuno').modal("hide");
                 formViaticoAprobacionuno.reset();
                 //swal("Viáticos", objData.msg, "success");
@@ -47,7 +50,10 @@ formViaticoAprobacionuno.onsubmit = function (e) {
                     text: objData.msg,
                     type: "success"
                 }, function () {
-                    window.location.href = base_url + '/Viaticosgenerales';
+                   location.reload(); // Recarga la página actual
+        setTimeout(() => {
+            window.history.back(); // Luego regresa a la anterior
+        }, 500); // Pequeño retraso para asegurar que cargue primero
                 });
 
 
@@ -65,7 +71,11 @@ formViaticoAprobacionuno.onsubmit = function (e) {
 function openModalValidatejefeSuperior(idviatico) {
    //document.querySelector("#formViaticoAprobacionJefaturaSuperior").reset();
     document.querySelector('#idviaticoap').value = idviatico;
-    document.querySelector('#correo_solicitante_aprob_final').value = userData.email_usuario;
+    // document.querySelector('#correo_solicitante_aprob_final').value = userData.email_usuario;
+    // consoler.log(userData);
+
+     const emailSolicitante = document.querySelector('#email_solicitante').textContent.trim();
+      document.querySelector('#correo_solicitante_aprob_final').value = emailSolicitante; // Aquí asignamos el correo
     //document.querySelector('#email_jefe_superior').value =userData.email_jefe_superior;
     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
     document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
@@ -111,7 +121,11 @@ formViaticoAprobacionJefaturaSuperior.onsubmit = function (e) {
                     text: objData.msg,
                     type: "success"
                 }, function () {
-                    window.location.href = base_url + '/Viaticosgenerales';
+                    //window.location.href = base_url + '/Viaticosgenerales';
+                                  location.reload(); // Recarga la página actual
+        // setTimeout(() => {
+        //     window.history.back(); // Luego regresa a la anterior
+        // }, 500); // Pequeño retraso para asegurar que cargue primero
                 });
 
 
@@ -128,8 +142,11 @@ formViaticoAprobacionJefaturaSuperior.onsubmit = function (e) {
 function openModalValidateCompras(idviatico) {
    //document.querySelector("#formViaticoAprobacionJefaturaSuperior").reset();
     document.querySelector('#idviatico_comp').value = idviatico;
-    document.querySelector('#correo_solicitante_comp').value = userData.email_usuario;
+    // document.querySelector('#correo_solicitante_comp').value = userData.email_usuario;
     //document.querySelector('#email_jefe_superior').value =userData.email_jefe_superior;
+
+         const emailSolicitante = document.querySelector('#email_solicitante').textContent.trim();
+      document.querySelector('#correo_solicitante_comp').value = emailSolicitante; // Aquí asignamos el correo
     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
     document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
     document.querySelector('#btnText').innerHTML = "Enviar decisión";
@@ -148,7 +165,7 @@ formViaticoAprobacionCompras.onsubmit = function (e) {
     let strEstadoap = document.querySelector('#listStatus_comp').value;
     let strDescripcionap = document.getElementById('txtComentarios_comp').value.trim();
 
-
+ 
     if (strEstadoap == '0') {
         swal("Atención", "Todos los campos son obligatorios.", "error");
         return false;
@@ -175,7 +192,8 @@ formViaticoAprobacionCompras.onsubmit = function (e) {
                     text: objData.msg,
                     type: "success"
                 }, function () {
-                    window.location.href = base_url + '/Viaticosgenerales';
+                    //window.location.href = base_url + '/Viaticosgenerales';
+                    location.reload(); // Recarga la página actual
                 });
 
 

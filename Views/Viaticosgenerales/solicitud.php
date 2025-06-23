@@ -30,14 +30,96 @@ getModal('modalValidacionCompras', $data);
     $usuarioSolicitaEstado = $data['arrSolicitud']['viaticos'];
     $detalleEstado = $data['arrSolicitud']['detalle'];
 
-  dep($usuarioSolicitaEstado);
+  //dep($estado);
 
 
   ?>
 
-    <?php if ($_SESSION['userData']['id_rol'] == '1') { ?>
 
-      <div class="row">
+
+    <?php 
+      echo '<pre>';
+print_r($_SESSION['userData']);
+echo '</pre>';
+    
+    if ($_SESSION['userData']['id_rol'] == '1') { 
+       if ($_SESSION['userData']['email_usuario'] == 'daniella.silva@ldrsolutions.com.mx') { echo "Imprimimos esto";?>
+
+               <div class="row">
+          <div class="col-md-12">
+            <div class="tile">
+              <section id="sPedido" class="invoice">
+                <div class="progress-track">
+
+                  <div class="step done">
+                    <div class="circle"><i class="fa fa-check"></i></div>
+                    <div class="label">Enviado</div>
+                  </div>
+
+                  <?php if ($estado['estado_viatico'] == 2) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 7) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 5 || $estado['estado_viatico'] == 7 || $estado['estado_viatico'] == 8 || $estado['estado_viatico'] == 9 || $estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Revisión (Jefe directo)</div>
+                    </div>
+
+
+                  <?php }
+
+                  if ($estado['estado_viatico'] == 8) { ?>
+
+                    <div class="step active">
+                      <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else if ($estado['estado_viatico'] == 9) {  ?>
+                    <div class="step bad">
+                      <div class="circle"><i class="fa fa-times"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+                  <?php } else if ($estado['estado_viatico'] == 10) {  ?>
+                    <div class="step done">
+                      <div class="circle"><i class="fa fa-check"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+                  <?php } else {  ?>
+
+                    <div class="step">
+                      <div class="circle"><i class="fa fa-file"></i></div>
+                      <div class="label">Autorización Realizada(Compras)</div>
+                    </div>
+
+
+                  <?php } ?>
+
+
+                </div>
+
+              </section>
+            </div>
+          </div>
+        </div>
+ 
+         <?php } else { ?> 
+              <div class="row">
         <div class="col-md-12">
           <div class="tile">
             <section id="sPedido" class="invoice">
@@ -135,6 +217,11 @@ getModal('modalValidacionCompras', $data);
           </div>
         </div>
       </div>
+          
+          
+          <?php }  ?>
+
+  
 
       <?php
 
@@ -161,13 +248,13 @@ getModal('modalValidacionCompras', $data);
                     <div class="label">Enviado</div>
                   </div>
 
-                  <?php if ($estado['estado_viatico'] == 2) { ?>
+                  <?php if ($estado['estado_viatico'] == 5) { ?>
 
                     <div class="step active">
                       <div class="circle"><i class="fa fa-spinner fa-spin"></i></div>
                       <div class="label">Revisión (Jefe directo)</div>
                     </div>
-                  <?php } else if ($estado['estado_viatico'] == 4) {  ?>
+                  <?php } else if ($estado['estado_viatico'] == 7) {  ?>
                     <div class="step bad">
                       <div class="circle"><i class="fa fa-times"></i></div>
                       <div class="label">Revisión (Jefe directo)</div>
@@ -336,7 +423,7 @@ getModal('modalValidacionCompras', $data);
 
 
       }
-    }else if($_SESSION['userData']['id_rol'] == '4'){
+    }else if($_SESSION['userData']['id_rol'] == '4'){ 
 
 
           if ($_SESSION['userData']['id_colaborador'] == $usuarioSolicitaEstado['id_colaborador']) {
@@ -421,7 +508,7 @@ getModal('modalValidacionCompras', $data);
       <?php
 
       } else if($usuarioSolicitaEstado['id_rol']=="3") {
-        echo 'Deberia de mostrarse  dos';
+        echo 'Deberia de mostrarse  dosss';
 
       ?>
                 <div class="row">
@@ -658,13 +745,14 @@ getModal('modalValidacionCompras', $data);
                 <address><strong><i class="fas fa-building text-primary"></i><?= NOMBRE_EMPESA; ?></strong><br>
                   <?= DIRECCION ?><br>
 
-                  <a href="<?= WEB_EMPRESA ?>" target="_blank">www.ldrsolutions.mx</a>
+                  <a href="<?= WEB_EMPRESA ?>" target="_blank">www.ldrsolutions.mx</a>  
                 </address>
               </div>
               <div class="col-4">
                 <address><strong><i class="fas fa-user text-primary"></i>Solicitante: <?= $usuarioSolicita['nombreusuario'] ?></strong><br>
                   <i class="fas fa-phone-alt"></i> Tel: <?= $usuarioSolicita['telefono_personal'] ?><br>
-                  <i class="fas fa-envelope"></i> Email: <?= $usuarioSolicita['email_corporativo'] ?>
+                  <i class="fas fa-envelope email_solicitante"></i> Email: <span id="email_solicitante"><?= $usuarioSolicita['email_corporativo'] ?></span>
+
                 </address>
               </div>
               <div class="col-4"><b class="folio_solicitud"><i class="fas fa-calendar-alt text-primary"></i>Fecha: <?= $usuarioSolicita['fechacreacion'] ?></b><br>
@@ -848,7 +936,7 @@ getModal('modalValidacionCompras', $data);
               <div class="col-12 d-flex justify-content-center btn-spacing-sol">
 
                 <?php 
-                if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $usuarioSolicitaEstado['id_rol']!="3") {
+                if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $_SESSION['userData']['id_rol'] == '3') {
                 if ($usuarioSolicita['estado_viatico'] == 2) { ?>
                   <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModal(<?php echo $usuarioSolicita['idviatico'] ?>)">
                     <i class="fa fa-tasks"></i> Gestionarss
@@ -856,23 +944,30 @@ getModal('modalValidacionCompras', $data);
                 <?php } }?>
 
                 <?php 
-                 if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador']) {
-                if ($usuarioSolicita['estado_viatico'] == 4 || $usuarioSolicita['estado_viatico'] == 5) { ?>
+
+                echo $_SESSION['userData']['id_rol'] ; 
+                echo 'usuario: '. $usuarioSolicitaEstado['id_colaborador'];
+                 if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $_SESSION['userData']['id_rol'] == '4' && $usuarioSolicita['estado_viatico'] < 7 ) {
+                ?>
                   <button class="btn btn-info" style="width: 300px;" type="button" onclick="openModalValidatejefeSuperior(<?php echo $usuarioSolicita['idviatico'] ?>)">
-                    <i class="fa fa-tasks"></i> Gestionar
+                    <i class="fa fa-tasks"></i> Gestionarrr
                   </button>
-                <?php }} ?>
+                <?php }else if($_SESSION['userData']['email_usuario'] == 'daniella.silva@ldrsolutions.com.mx' && $usuarioSolicita['estado_viatico'] < 8){  ?>
+   <button class="btn btn-info" style="width: 300px;" type="button" onclick="openModalValidatejefeSuperior(<?php echo $usuarioSolicita['idviatico'] ?>)">
+                    <i class="fa fa-tasks"></i> Gestionarrr
+                  </button>
+                 <?php }  ?>
 
                 <?php 
 // echo $_SESSION['userData']['id_colaborador'] ; echo  $usuarioSolicitaEstado['id_colaborador'];
 
 
-                          if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador']) {
-                if ($usuarioSolicita['estado_viatico'] == 7 || $usuarioSolicita['estado_viatico'] == 8) { ?>
+                          if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $_SESSION['userData']['email_usuario'] == 'astrid.sebastian@ldrsolutions.com.mx' && $usuarioSolicita['estado_viatico'] < 9) {
+                ?>
                   <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModalValidateCompras(<?php echo $usuarioSolicita['idviatico'] ?>)">
                     <i class="fa fa-tasks"></i> Finalizar Solicitud
                   </button>
-                <?php }} ?>
+                <?php } ?>
 
                 <a class="btn btn-primary" style="width: 300px;" href="javascript:window.print('#sPedido');">
                   <i class="fa fa-print"></i> Imprimir

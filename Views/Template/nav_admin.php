@@ -39,7 +39,7 @@
             </ul>
         </li>
 
-        <?php  if($_SESSION['userData']['id_area']=="32" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
+        <?php  if($_SESSION['userData']['id_area']=="132" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
 
                 <li>
             <a class="app-menu__item" href="<?= base_url(); ?>/comprobantesgenerales">
@@ -52,7 +52,7 @@
 	}
  ?>
 
-        <?php  if($_SESSION['userData']['id_area']=="32" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
+        <?php  if($_SESSION['userData']['id_area']=="132" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
    
         <li>
             <a class="app-menu__item" href="<?= base_url(); ?>/ccostos">

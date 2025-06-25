@@ -63,8 +63,61 @@
       </div>
     </div>
 
+ <?php
+
+            if ($_SESSION['userData']['email_usuario'] === 'daniella.silva@ldrsolutions.com.mx' || $_SESSION['userData']['email_usuario'] === 'raul.tellez@ldrsolutions.com.mx' || $_SESSION['userData']['email_usuario'] === 'astrid.sebastian@ldrsolutions.com.mx') {
+              
+            ?>
 
     <div class="col-md-6">
+      <div class="tile">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="tile-title mb-0">Listado de solicitudes aprobadas recientemente </h3>
+          <a href="<?= base_url() ?>/ruta-todas-solicitudes" class="btn btn-sm btn-outline-primary ">Ver todas</a>
+        </div>
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+           <th>FOLIO</th>
+              <th>Solicita</th>
+              <th>Total</th>
+
+              <th></th> 
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+
+            if (count($data['allSolicitudesAprobadas']) > 0) {
+              foreach ($data['allSolicitudesAprobadas'] as $solicitud) {
+            ?>
+                <tr>
+                  <td><?= $solicitud['codigo_solicitud'] ?></td>
+                  <td><?= $solicitud['correo'] ?></td>
+                  <td><?= formatMoney($solicitud['total']) ?></td>
+                  <td><a href="<?= base_url() ?>/viaticosgenerales/solicitud/<?= $solicitud['idviatico'] ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                </tr>
+              <?php
+              }
+            } else {
+              ?>
+              <tr>
+                <td colspan="4" class="text-center">No hay solicitudes.</td>
+              </tr>
+            <?php
+            }
+            ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+     <?php
+
+           }else{
+            ?>
+
+                <div class="col-md-6">
       <div class="tile">
         <div class="d-flex justify-content-between align-items-center mb-2">
           <h3 class="tile-title mb-0">Solicitudes por área</h3>
@@ -106,6 +159,11 @@
         </table>
       </div>
     </div>
+
+      <?php
+
+           }
+            ?>
 
 
 

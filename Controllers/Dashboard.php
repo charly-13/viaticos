@@ -28,8 +28,10 @@ class Dashboard extends Controllers
 			$data['solicitudesPendientes'] = $this->model->solicitudesPendientesDirectores();
 		}else if ($_SESSION['userData']['email_usuario'] === 'astrid.sebastian@ldrsolutions.com.mx') {
 			$data['solicitudesPendientes'] = $this->model->solicitudesPendientesCobranza();
-		}else if ($_SESSION['userData']['email_usuario'] === 'daniella.silva@ldrsolutions.com.mx') {
+			$data['allSolicitudesAprobadas'] = $this->model->mostrarTodasSolicitudes();
+		}else if ($_SESSION['userData']['email_usuario'] === 'daniella.silva@ldrsolutions.com.mx' || $_SESSION['userData']['email_usuario'] === 'raul.tellez@ldrsolutions.com.mx') {
 			$data['solicitudesPendientes'] = $this->model->solicitudesPendientesDierccionGral();
+			$data['allSolicitudesAprobadas'] = $this->model->mostrarTodasSolicitudes();
 		}
 		//$data['solicitudesPendientes'] = $this->model->solicitudesPendientesGerentes();
 

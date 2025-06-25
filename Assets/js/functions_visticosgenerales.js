@@ -87,7 +87,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const strDescripcion = document.getElementById('txtDescripcion').value.trim();
 
 
-        if (strNombre == '' || intlistCentrosCosto == '0' || strfecha_salida == '' || strfecha_regreso == '' || strmotivo == '' || strlugar_destino == '') {
+         let strlistBancos = document.querySelector('#listBancos').value;
+         let strbiaticos_nombre_titular = document.querySelector('#biaticos_nombre_titular').value;
+        let strbiaticos_numero_cuenta = document.querySelector('#biaticos_numero_cuenta').value;
+        let strbiaticos_clabe_interbancaria = document.querySelector('#biaticos_clabe_interbancaria').value;
+        
+
+
+
+        if (strNombre == '' || intlistCentrosCosto == '0' || strfecha_salida == '' || strfecha_regreso == '' || strmotivo == '' || strlugar_destino == '' || strlistBancos == '0' || strlistBancos == '1' || strbiaticos_nombre_titular == '' || strbiaticos_numero_cuenta == '' || strbiaticos_clabe_interbancaria == '' ) {
             swal("Atención", "Todos los campos son obligatorios.", "error");
             return false;
         } else if (!strDescripcion) {
@@ -126,6 +134,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    fntBancos();
+
 }, false);
 
 tinymce.init({
@@ -143,116 +153,133 @@ tinymce.init({
 
 
 
-
-
-function fntViewInfo(idcategoria) {
-    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
-    request.open("GET", ajaxUrl, true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState == 4 && request.status == 200) {
-            let objData = JSON.parse(request.responseText);
-            if (objData.status) {
-                let estado = objData.data.status == 1 ?
-                    '<span class="badge badge-success">Activo</span>' :
-                    '<span class="badge badge-danger">Inactivo</span>';
-                document.querySelector("#celId").innerHTML = objData.data.idcategoria;
-                document.querySelector("#celNombre").innerHTML = objData.data.nombre;
-                document.querySelector("#celDescripcion").innerHTML = objData.data.descripcion;
-                document.querySelector("#celEstado").innerHTML = estado;
-                document.querySelector("#imgCategoria").innerHTML = '<img src="' + objData.data.url_portada + '"></img>';
-                $('#modalViewCategoria').modal('show');
-            } else {
-                swal("Error", objData.msg, "error");
+function fntBancos(){
+    if(document.querySelector('#listBancos')){
+        let ajaxUrl = base_url+'/Viaticosgenerales/getSelectBancos';
+        let request = (window.XMLHttpRequest) ? 
+                    new XMLHttpRequest() : 
+                    new ActiveXObject('Microsoft.XMLHTTP');
+        request.open("GET",ajaxUrl,true);
+        request.send();
+        request.onreadystatechange = function(){
+            if(request.readyState == 4 && request.status == 200){
+                document.querySelector('#listBancos').innerHTML = request.responseText;
+                $('#listBancos').selectpicker('render');
             }
         }
     }
 }
 
-function fntEditInfo(element, idcategoria) {
-    rowTable = element.parentNode.parentNode.parentNode;
-    document.querySelector('#titleModal').innerHTML = "Actualizar Categoría";
-    document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
-    document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
-    document.querySelector('#btnText').innerHTML = "Actualizar";
-    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
-    request.open("GET", ajaxUrl, true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState == 4 && request.status == 200) {
-            let objData = JSON.parse(request.responseText);
-            if (objData.status) {
-                document.querySelector("#idCategoria").value = objData.data.idcategoria;
-                document.querySelector("#txtNombre").value = objData.data.nombre;
-                document.querySelector("#txtDescripcion").value = objData.data.descripcion;
-                document.querySelector('#foto_actual').value = objData.data.portada;
-                document.querySelector("#foto_remove").value = 0;
 
-                if (objData.data.status == 1) {
-                    document.querySelector("#listStatus").value = 1;
-                } else {
-                    document.querySelector("#listStatus").value = 2;
-                }
-                $('#listStatus').selectpicker('render');
 
-                if (document.querySelector('#img')) {
-                    document.querySelector('#img').src = objData.data.url_portada;
-                } else {
-                    document.querySelector('.prevPhoto div').innerHTML = "<img id='img' src=" + objData.data.url_portada + ">";
-                }
+// function fntViewInfo(idcategoria) {
+//     let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+//     let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
+//     request.open("GET", ajaxUrl, true);
+//     request.send();
+//     request.onreadystatechange = function () {
+//         if (request.readyState == 4 && request.status == 200) {
+//             let objData = JSON.parse(request.responseText);
+//             if (objData.status) {
+//                 let estado = objData.data.status == 1 ?
+//                     '<span class="badge badge-success">Activo</span>' :
+//                     '<span class="badge badge-danger">Inactivo</span>';
+//                 document.querySelector("#celId").innerHTML = objData.data.idcategoria;
+//                 document.querySelector("#celNombre").innerHTML = objData.data.nombre;
+//                 document.querySelector("#celDescripcion").innerHTML = objData.data.descripcion;
+//                 document.querySelector("#celEstado").innerHTML = estado;
+//                 document.querySelector("#imgCategoria").innerHTML = '<img src="' + objData.data.url_portada + '"></img>';
+//                 $('#modalViewCategoria').modal('show');
+//             } else {
+//                 swal("Error", objData.msg, "error");
+//             }
+//         }
+//     }
+// }
 
-                if (objData.data.portada == 'portada_categoria.png') {
-                    document.querySelector('.delPhoto').classList.add("notBlock");
-                } else {
-                    document.querySelector('.delPhoto').classList.remove("notBlock");
-                }
+// function fntEditInfo(element, idcategoria) {
+//     rowTable = element.parentNode.parentNode.parentNode;
+//     document.querySelector('#titleModal').innerHTML = "Actualizar Categoría";
+//     document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
+//     document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
+//     document.querySelector('#btnText').innerHTML = "Actualizar";
+//     let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+//     let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
+//     request.open("GET", ajaxUrl, true);
+//     request.send();
+//     request.onreadystatechange = function () {
+//         if (request.readyState == 4 && request.status == 200) {
+//             let objData = JSON.parse(request.responseText);
+//             if (objData.status) {
+//                 document.querySelector("#idCategoria").value = objData.data.idcategoria;
+//                 document.querySelector("#txtNombre").value = objData.data.nombre;
+//                 document.querySelector("#txtDescripcion").value = objData.data.descripcion;
+//                 document.querySelector('#foto_actual').value = objData.data.portada;
+//                 document.querySelector("#foto_remove").value = 0;
 
-                $('#modalFormViaticosGenerales').modal('show');
+//                 if (objData.data.status == 1) {
+//                     document.querySelector("#listStatus").value = 1;
+//                 } else {
+//                     document.querySelector("#listStatus").value = 2;
+//                 }
+//                 $('#listStatus').selectpicker('render');
 
-            } else {
-                swal("Error", objData.msg, "error");
-            }
-        }
-    }
-}
+//                 if (document.querySelector('#img')) {
+//                     document.querySelector('#img').src = objData.data.url_portada;
+//                 } else {
+//                     document.querySelector('.prevPhoto div').innerHTML = "<img id='img' src=" + objData.data.url_portada + ">";
+//                 }
 
-function fntDelInfo(idcategoria) {
-    swal({
-        title: "Eliminar Categoría",
-        text: "¿Realmente quiere eliminar al categoría?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si, eliminar!",
-        cancelButtonText: "No, cancelar!",
-        closeOnConfirm: false,
-        closeOnCancel: true
-    }, function (isConfirm) {
+//                 if (objData.data.portada == 'portada_categoria.png') {
+//                     document.querySelector('.delPhoto').classList.add("notBlock");
+//                 } else {
+//                     document.querySelector('.delPhoto').classList.remove("notBlock");
+//                 }
 
-        if (isConfirm) {
-            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url + '/Categorias/delCategoria';
-            let strData = "idCategoria=" + idcategoria;
-            request.open("POST", ajaxUrl, true);
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send(strData);
-            request.onreadystatechange = function () {
-                if (request.readyState == 4 && request.status == 200) {
-                    let objData = JSON.parse(request.responseText);
-                    if (objData.status) {
-                        swal("Eliminar!", objData.msg, "success");
-                        tableViaticos.api().ajax.reload();
-                    } else {
-                        swal("Atención!", objData.msg, "error");
-                    }
-                }
-            }
-        }
+//                 $('#modalFormViaticosGenerales').modal('show');
 
-    });
+//             } else {
+//                 swal("Error", objData.msg, "error");
+//             }
+//         }
+//     }
+// }
 
-}
+// function fntDelInfo(idcategoria) {
+//     swal({
+//         title: "Eliminar Categoría",
+//         text: "¿Realmente quiere eliminar al categoría?",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonText: "Si, eliminar!",
+//         cancelButtonText: "No, cancelar!",
+//         closeOnConfirm: false,
+//         closeOnCancel: true
+//     }, function (isConfirm) {
+
+//         if (isConfirm) {
+//             let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+//             let ajaxUrl = base_url + '/Categorias/delCategoria';
+//             let strData = "idCategoria=" + idcategoria;
+//             request.open("POST", ajaxUrl, true);
+//             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//             request.send(strData);
+//             request.onreadystatechange = function () {
+//                 if (request.readyState == 4 && request.status == 200) {
+//                     let objData = JSON.parse(request.responseText);
+//                     if (objData.status) {
+//                         swal("Eliminar!", objData.msg, "success");
+//                         tableViaticos.api().ajax.reload();
+//                     } else {
+//                         swal("Atención!", objData.msg, "error");
+//                     }
+//                 }
+//             }
+//         }
+
+//     });
+
+// }
 
 
 
@@ -261,70 +288,153 @@ const usuarioEnSesion = 'usuario1'; // <-- Cámbialo a otro valor para probar el
 const fechaSalidaInput = document.getElementById('fecha_salida');
 const fechaRegresoInput = document.getElementById('fecha_regreso');
 
-function openModal() {
+// function openModalDos() {
 
-
-
-
-
-    rowTable = "";
-    document.querySelector('#idviatico').value = "";
-    document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
-    document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
-    document.querySelector('#btnText').innerHTML = "Solicitar";
-    document.querySelector('#titleModal').innerHTML = '<i class="fa fa-file-alt mr-2"></i> Registrar Nueva Solicitud';
-    document.querySelector("#formViaticoGeneral").reset();
+//     rowTable = "";
+//     document.querySelector('#idviatico').value = "";
+//     document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
+//     document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
+//     document.querySelector('#btnText').innerHTML = "Solicitar";
+//     document.querySelector('#titleModal').innerHTML = '<i class="fa fa-file-alt mr-2"></i> Registrar Nueva Solicitud';
+//     document.querySelector("#formViaticoGeneral").reset();
  
-    const ahora = new Date();
-    const year = ahora.getFullYear();
-    const month = String(ahora.getMonth() + 1).padStart(2, '0');
-    const day = String(ahora.getDate()).padStart(2, '0');
-    const hours = String(ahora.getHours()).padStart(2, '0');
-    const minutes = String(ahora.getMinutes()).padStart(2, '0');
-    const fechaHoraLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
-    document.querySelector('#fechacreacion').value = fechaHoraLocal;
+//     const ahora = new Date();
+//     const year = ahora.getFullYear();
+//     const month = String(ahora.getMonth() + 1).padStart(2, '0');
+//     const day = String(ahora.getDate()).padStart(2, '0');
+//     const hours = String(ahora.getHours()).padStart(2, '0');
+//     const minutes = String(ahora.getMinutes()).padStart(2, '0');
+//     const fechaHoraLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+//     document.querySelector('#fechacreacion').value = fechaHoraLocal;
 
 
-    // --- Lógica de fechas para inputs fechaSalida y fechaRegreso ---
+//     // --- Lógica de fechas para inputs fechaSalida y fechaRegreso ---
 
-    // Si el usuario es diferente a el área de POST VENTA el usuario podrá seleccionar despues de 7 días de anticipo
-    let fechaMin = new Date();
-    if (userData.id_area != '90') {
-        fechaMin.setDate(fechaMin.getDate() + 8); // +7 días para usuario1
-    }
-    // Convertimos a formato YYYY-MM-DD para el input date
-    const fechaMinStr = fechaMin.toISOString().split('T')[0];
+//     // Si el usuario es diferente a el área de POST VENTA el usuario podrá seleccionar despues de 7 días de anticipo
+//     let fechaMin = new Date();
+//     if (userData.id_area != '90') {
+//         fechaMin.setDate(fechaMin.getDate() + 8); // +7 días para usuario1
+//     }
+//     // Convertimos a formato YYYY-MM-DD para el input date
+//     const fechaMinStr = fechaMin.toISOString().split('T')[0];
 
-    // Asignamos los min y valor inicial para ambos inputs
-    const fechaSalidaInput = document.querySelector('#fecha_salida');
-    const fechaRegresoInput = document.querySelector('#fecha_regreso');
+//     // Asignamos los min y valor inicial para ambos inputs
+//     const fechaSalidaInput = document.querySelector('#fecha_salida');
+//     const fechaRegresoInput = document.querySelector('#fecha_regreso');
 
-    if (fechaSalidaInput && fechaRegresoInput) {
-        fechaSalidaInput.min = fechaMinStr;
-        fechaRegresoInput.min = fechaMinStr;
-        fechaSalidaInput.value = fechaMinStr;
-        fechaRegresoInput.value = fechaMinStr;
-    }
-    // -------------------------------------------------------------
-
-
-
-    $('#modalFormViaticosGenerales').modal('show');
-    fntAreas();
-    fntCentrosCosto(session_id_area);
-    renderTabla();
-
-      if(userData.id_rol=='4'){
-// console.log("deberiamos de mandar directamente a telles");
- document.querySelector('#email_jefe_directo').value = 'raul.tellez@ldrsolutions.com.mx';
-  }
-
-      document.querySelector('#idjefedirecto').value = userData.id_colaborador_jefe;
-
-      document.querySelector('#idjefedirectosuperior').value = userData.id_colaborador_jefe_superior;
+//     if (fechaSalidaInput && fechaRegresoInput) {
+//         fechaSalidaInput.min = fechaMinStr;
+//         fechaRegresoInput.min = fechaMinStr;
+//         fechaSalidaInput.value = fechaMinStr;
+//         fechaRegresoInput.value = fechaMinStr;
+//     }
+//     // -------------------------------------------------------------
 
 
+
+//     $('#modalFormViaticosGenerales').modal('show');
+//     fntAreas();
+//     fntCentrosCosto(session_id_area);
+//     renderTabla();
+
+//       if(userData.id_rol=='4'){
+// // console.log("deberiamos de mandar directamente a telles");
+//  document.querySelector('#email_jefe_directo').value = 'raul.tellez@ldrsolutions.com.mx';
+//   }
+
+//       document.querySelector('#idjefedirecto').value = userData.id_colaborador_jefe;
+
+//       document.querySelector('#idjefedirectosuperior').value = userData.id_colaborador_jefe_superior;
+
+//       if(userData.biaticos_id_banco != '1'){
+// document.getElementById('divDatosBancarios').style.display = 'none';
+//       }else{
+// document.getElementById('divDatosBancarios').style.display = 'block';
+//       }
+
+//   document.querySelector('#listBancos').value = userData.id_banco;
+//   $('#listBancos').selectpicker('render');
+//  document.querySelector('#biaticos_numero_cuenta').value = userData.cuenta_bancaria;
+//  document.querySelector('#biaticos_clabe_interbancaria').value = userData.	clabe_interbancaria;
+//  document.querySelector('#id_colaborador').value = userData.id_colaborador;
+ 
+
+// }
+
+
+function openModal() {
+  fetch(base_url+'/Viaticosgenerales/getDataUsuario')
+    .then(res => res.json())
+    .then(response => {
+      if (response.status) {
+        const data = response.data; 
+
+        // Ya tienes los datos, ahora los usas para preparar el modal
+        rowTable = "";
+        document.querySelector('#idviatico').value = "";
+        document.querySelector('.modal-header').classList.replace("headerUpdate", "headerRegister");
+        document.querySelector('#btnActionForm').classList.replace("btn-info", "btn-primary");
+        document.querySelector('#btnText').innerHTML = "Solicitar";
+        document.querySelector('#titleModal').innerHTML = '<i class="fa fa-file-alt mr-2"></i> Registrar Nueva Solicitud';
+        document.querySelector("#formViaticoGeneral").reset();
+
+        // Fecha creación
+        const ahora = new Date();
+        const year = ahora.getFullYear();
+        const month = String(ahora.getMonth() + 1).padStart(2, '0');
+        const day = String(ahora.getDate()).padStart(2, '0');
+        const hours = String(ahora.getHours()).padStart(2, '0');
+        const minutes = String(ahora.getMinutes()).padStart(2, '0');
+        const fechaHoraLocal = `${year}-${month}-${day}T${hours}:${minutes}`;
+        document.querySelector('#fechacreacion').value = fechaHoraLocal;
+
+        // Fechas mínimas
+        let fechaMin = new Date();
+        if (userData.id_area != '90') {
+          fechaMin.setDate(fechaMin.getDate() + 8);
+        }
+        const fechaMinStr = fechaMin.toISOString().split('T')[0];
+        document.querySelector('#fecha_salida').min = fechaMinStr;
+        document.querySelector('#fecha_regreso').min = fechaMinStr;
+        document.querySelector('#fecha_salida').value = fechaMinStr;
+        document.querySelector('#fecha_regreso').value = fechaMinStr;
+
+        // Mostrar modal y cargar selects
+        $('#modalFormViaticosGenerales').modal('show');
+        fntAreas();
+        fntCentrosCosto(session_id_area);
+        renderTabla();
+
+        if (userData.id_rol == '4') {
+          document.querySelector('#email_jefe_directo').value = 'raul.tellez@ldrsolutions.com.mx';
+        }
+
+        document.querySelector('#idjefedirecto').value = userData.id_colaborador_jefe;
+        document.querySelector('#idjefedirectosuperior').value = userData.id_colaborador_jefe_superior;
+
+        // Mostrar u ocultar sección bancaria según base de datos
+        if (data.biaticos_id_banco != '1') {
+          document.getElementById('divDatosBancarios').style.display = 'none';
+        } else {
+          document.getElementById('divDatosBancarios').style.display = 'block';
+        }
+
+        // Llenar inputs bancarios
+        document.querySelector('#listBancos').value = data.id_banco;
+        $('#listBancos').selectpicker('render');
+        document.querySelector('#biaticos_numero_cuenta').value = data.cuenta_bancaria;
+        document.querySelector('#biaticos_clabe_interbancaria').value = data.clabe_interbancaria;
+        document.querySelector('#id_colaborador').value = data.id_colaborador;
+
+      } else {
+        alert("No se pudieron cargar los datos bancarios.");
+      }
+    })
+    .catch(err => {
+      console.error("Error al consultar datos bancarios:", err);
+    });
 }
+
 
 
 const fecha_salida = document.getElementById('fecha_salida');

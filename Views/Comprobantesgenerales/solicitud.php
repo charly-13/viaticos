@@ -2,10 +2,6 @@
 getModal('modalValidacionuno', $data);
 getModal('modalValidacionJefaturaSuperior', $data);
 getModal('modalValidacionCompras', $data);
-
-//     echo '<pre>';
-// print_r($_SESSION['userData']);
-// echo '</pre>';
 ?>
 <main class="app-content">
   <div class="app-title">
@@ -20,8 +16,30 @@ getModal('modalValidacionCompras', $data);
 
   <div class="row"> 
     <div class="col-md-12">
-      <div class="tile shadow rounded-3 p-4">
 
+<?php
+if (!empty($data['arrSolicitudComprobantes']['viaticosComprobantes'])) {
+  $viaticosComprobantes = $data['arrSolicitudComprobantes']['viaticosComprobantes'];
+
+  // Agrupar por conceptoid
+  $comprobantesPorConcepto = [];
+  foreach ($viaticosComprobantes as $comprobante) {
+    $conceptoId = $comprobante['conceptoid'] ?? 0;
+    $comprobantesPorConcepto[$conceptoId]['concepto'] = $comprobante['concepto'];
+    $comprobantesPorConcepto[$conceptoId]['items'][] = $comprobante;
+  }
+
+  // VARIABLES PARA TOTAL GENERAL
+  $totalGeneral = 0;
+  $contadorGeneral = 0;
+
+  foreach ($comprobantesPorConcepto as $conceptoId => $grupo) {
+
+    // VARIABLES PARA TOTAL POR CONCEPTO/DÍA
+    $totalConcepto = 0;
+    $contadorConcepto = 0;
+?>
+      <div class="tile shadow rounded-3 p-4 mb-4">
         <section id="sPedido" class="invoice">
           <div class="row mb-4">
             <div class="col-6">
@@ -30,7 +48,7 @@ getModal('modalValidacionCompras', $data);
               </h2>
             </div>
             <div class="col-6 text-end">
-              <h5>FOLIO: 101010</h5>
+              <h5>FOLIO: <?= $grupo['items'][0]['codigo_solicitud'] ?? '' ?></h5>
             </div>
           </div>
 
@@ -38,114 +56,108 @@ getModal('modalValidacionCompras', $data);
             COMPROBANTES DE GASTOS
           </h6>
 
-          <br>
-          <?php
-          if (!empty($data['arrSolicitudComprobantes'])) {
-            $viaticosComprobantes = $data['arrSolicitudComprobantes']['viaticosComprobantes'];
+          <div class="day-header fs-5 fw-bold my-3" style="background:#343a40; color:white; padding: 8px; border-radius: 4px;">
+            <i class="bi bi-folder2-open"></i> <?= $grupo['concepto'] ?>
+          </div>
 
-            // Agrupar por conceptoid
-            $comprobantesPorConcepto = [];
-            foreach ($viaticosComprobantes as $comprobante) {
-              $conceptoId = $comprobante['conceptoid'] ?? 0;
-              $comprobantesPorConcepto[$conceptoId]['concepto'] = $comprobante['concepto'];
-              $comprobantesPorConcepto[$conceptoId]['items'][] = $comprobante;
-            }
-          ?>
+          <div class="row g-3 mb-4">
+<?php foreach ($grupo['items'] as $comprobante) { 
+            $totalConcepto += floatval($comprobante['total']);
+            $contadorConcepto++;
+            $totalGeneral += floatval($comprobante['total']);
+            $contadorGeneral++;
+?>
+            <div class="col-md-4 comprobante-item">
+              <div class="card comprobante-card shadow-sm border" id="comp-<?= $comprobante['idcomprobante'] ?>">
+                <div class="card-body">
 
-            <?php foreach ($comprobantesPorConcepto as $conceptoId => $grupo) {  ?>
-              <div class="concept-header my-4 fw-bold fs-5" style="color:#ffffff; background: #343a40;">
-                <i class="fas fa-folder-open"></i> Concepto: <?= $grupo['concepto'] ?>
-              </div>
+                  <div class="comprobante-header fw-bold mb-2"><i class="bi bi-receipt-cutoff text-secondary"></i> <?= formatearFechaCompleta($comprobante['fecha']) ?></div>
+                   
+                  <p class="text-muted mb-1">Proveedor: <strong><?= $comprobante['rfcemisor'] ?? 'N/A' ?></strong></p>
+                  <p class="mb-1"><strong>Monto:</strong> <?= formatMoney($comprobante['total']) ?></p>
 
-              <?php foreach ($grupo['items'] as $comprobante) { ?>
-                <div class="concept-content mb-4 p-3 border rounded">
+                  <p class="mb-1"><i class="bi bi-file-earmark-pdf-fill text-danger icono-doc"></i> 
+                    <?php if (!empty($comprobante['rutapdf'])) { ?>
+                      <a href="<?= media() . '/uploads/pdf/' . $comprobante['rutapdf'] ?>" target="_blank" class="btn btn-outline-danger btn-sm"><i class="fas fa-file-pdf"></i> PDF</a>
+                    <?php } else { ?>
+                      <button class="btn btn-outline-danger btn-sm disabled"><i class="fas fa-file-pdf"></i> Sin PDF</button>
+                    <?php } ?>
+                  </p>
 
-                  <div class="day-title fw-bold mb-2" style="font-size: 18px; background: #ce5e3a33;">
-                    DÍA SOLICITADO: <?= $comprobante['fecha'] ?? 'Fecha no disponible' ?>
+                  <p><i class="bi bi-filetype-xml text-primary icono-doc"></i> 
+                    <a href="<?= media() . '/uploads/xml/' . $comprobante['rutaxml'] ?>" class="btn btn-outline-primary btn-sm"><i class="fas fa-file-code"></i> XML</a>
+                  </p>
+
+                  <div class="small text-muted mb-2">
+                    <div><strong>UUID:</strong> <?= $comprobante['uuid'] ?? 'N/A' ?></div>
+                    <div><strong>Subtotal:</strong> <?= isset($comprobante['subtotal_comprobante']) ? formatMoney($comprobante['subtotal_comprobante']) : '$0.00' ?></div>
+                    <div><strong>Fecha Factura:</strong> <?= $comprobante['fechafactura'] ?? 'N/A' ?></div>
                   </div>
 
-                  <div class="comprobante-item" data-amount="<?= $comprobante['total'] ?>">
-                    <div class="comprobante-info d-flex justify-content-between flex-wrap">
+                  <?php if ($comprobante['estado_documento'] == 1) { ?>
+                    <div class="comprobante-status pendiente">⏳ Pendiente</div>
+                  <?php } elseif ($comprobante['estado_documento'] == 2) { ?>
+                    <div class="comprobante-status rechazado">❌ Rechazado</div>
+                  <?php } elseif ($comprobante['estado_documento'] == 3) { ?>
+                    <div class="comprobante-status aprobado">✅ Aprobado</div>
+                  <?php } ?>
+  <!-- <p  style="font-size: 12px;" class="text-muted mb-1">Comentario: <strong><?= $comprobante['comentarios'] ?? 'N/A' ?></strong></p> -->
+                  <br><br>    
+                 
 
-                      <div class="info-left mb-2">
-                        <div><strong style="font-size: 18px;">Monto Total: <?= formatMoney($comprobante['total']) ?></strong></div>
-                        <div class="comentarios"><?= $comprobante['comentarios'] ?? 'Sin descripción' ?></div>
-                        <?php if ($comprobante['estado_documento'] == 1) { ?>
-                          <div class="comprobante-status pendiente">⏳ Pendiente</div>
+                  <?php if (!in_array($comprobante['estado_documento'], ['2', '3'])) { ?>
+                    <div class="status-comment"></div>
+                  <?php } else { ?>
+                    <div class="status-comment"><?= $comprobante['comentario_compras'] ?></div>
+                  <?php } ?>
 
-                        <?php } else if ($comprobante['estado_documento'] == 2) { ?>
-                          <div class="comprobante-status rechazado">❌ Rechazado</div>
-                        <?php } else if ($comprobante['estado_documento'] == 3) { ?>
-                          <div class="comprobante-status aprobado">✅ Aprobado</div>
-                        <?php } ?>
-
-
-                   <?php if (!in_array($comprobante['estado_documento'], ['2', '3'])) { ?>
-                          <div class="status-comment"> </div>
-                         <?php }else{ ?>
-
-                  <div class="status-comment"> <?= $comprobante['comentario_compras'] ?></div>
-                          <?php } ?>
-                      </div>
-
-                      <div class="document-links mb-2">
-
-                        <?php if (!empty($comprobante['rutapdf'])) { ?>
-                          <a href="<?= media() . '/uploads/pdf/' . $comprobante['rutapdf'] ?>" target="_blank" class="btn btn-outline-danger btn-sm"><i class="fas fa-file-pdf"></i> PDF</a>
-                        <?php } else { ?>
-                          <button class="btn btn-outline-danger btn-sm disabled"><i class="fas fa-file-pdf"></i> Sin PDF</button>
-                        <?php } ?>
-
-
-                        <a href="<?= media() . '/uploads/xml/' . $comprobante['rutaxml'] ?>" class="btn btn-outline-primary btn-sm"><i class="fas fa-file-code"></i> XML</a>
-                      </div>
-                    </div>
-
-                    <div class="factura-datos bg-light p-2 rounded border mt-2 mb-3 small">
-                      <div><strong>UUID:</strong> <?= $comprobante['uuid'] ?? 'N/A' ?></div>
-                      <div><strong>RFC Emisor:</strong> <?= $comprobante['rfcemisor'] ?? 'N/A' ?></div>
-                      <!-- <div><strong>RFC Receptor:</strong> <?= $comprobante['rfcreceptor'] ?? 'N/A' ?></div> -->
-                      <div><strong>Subtotal:</strong> <?= isset($comprobante['subtotal_comprobante']) ? formatMoney($comprobante['subtotal_comprobante']) : '$0.00' ?></div>
-                      <div><strong>Total:</strong> <?= isset($comprobante['total']) ? formatMoney($comprobante['total']) : '$0.00' ?></div>
-                      <div><strong>Fecha factura:</strong> <?= $comprobante['fechafactura'] ?? 'N/A' ?></div>
-                    </div>
-
-<?php  if($_SESSION['userData']['id_area']=="32" || $_SESSION['userData']['email_usuario']=="carlos.cruz@ldrsolutions.com.mx") {?>
+                  <?php if ($_SESSION['userData']['id_area'] == "132" || $_SESSION['userData']['email_usuario'] == "carlos.cruz@ldrsolutions.com.mx") { ?>
                     <?php if (!in_array($comprobante['estado_documento'], ['2', '3'])) { ?>
                       <div class="action-section">
-                        <textarea class="form-control mb-2 comment-area" placeholder="Agregar un comentario (opcional)..."></textarea>
-                        <div>
-
-                          <button class="btn btn-success btn-sm me-2" onclick="evaluarComprobante(this, '3', <?= $comprobante['idcomprobante'] ?>)">
-                            <i class="fas fa-check"></i> Aprobar
-                          </button>
-                          <button class="btn btn-danger btn-sm" onclick="evaluarComprobante(this, '2', <?= $comprobante['idcomprobante'] ?>)">
-                            <i class="fas fa-times"></i> Rechazar
-                          </button>
-
+                        <textarea class="form-control mb-2 comment-area" placeholder="Agregar comentario (requerido)..."></textarea>
+                        <div class="d-flex justify-content-between btn-group-sm">
+                          <button class="btn btn-success" onclick="evaluarComprobante(this, '3', <?= $comprobante['idcomprobante'] ?>)"><i class="bi bi-check-circle"></i> Aprobar</button>
+                          <button class="btn btn-danger" onclick="evaluarComprobante(this, '2', <?= $comprobante['idcomprobante'] ?>)"><i class="bi bi-x-circle"></i> Rechazar</button>
                         </div>
                       </div>
-
                     <?php } ?>
-                     <?php } ?>
+                  <?php } ?>
 
-                  </div>
                 </div>
-              <?php } ?>
-            <?php } ?>
+              </div>
+            </div>
+<?php } ?>
+          </div>
 
-          <?php } else {
-            echo '<p>Datos no encontrados</p>';
-          } ?>
-
-
-          <div class="concept-total-container fw-bold fs-5 mt-4">
-            Total de facturas: <span id="total-alimentacion">$0.00</span>
+          <!-- TOTAL POR CONCEPTO/DÍA -->
+          <div class="concept-total-container fw-bold fs-5 mt-4 text-end border-top pt-3">
+            Total del concepto: <?= formatMoney($totalConcepto) ?> <br>
+            Facturas: <?= $contadorConcepto ?>
           </div>
 
         </section>
-
       </div>
+<?php
+  } // foreach conceptos
+
+  // TOTAL GENERAL
+?>
+      <div class="tile totalesGenerales shadow rounded-3 p-4 mb-4">
+        <h4 class="fw-bold text-end">Total general de comprobantes: <?= formatMoney($totalGeneral) ?> (<?= $contadorGeneral ?> facturas)</h4>
+      </div>
+
+<?php
+} else {
+?>
+      <div class="tile shadow rounded-3 p-4 text-center">
+        <section id="sPedido" class="invoice">
+          <i class="bi bi-folder-x fs-1 text-secondary mb-3"></i>
+          <h4 class="text-muted">No se encontraron comprobantes registrados.</h4>
+        </section>
+      </div>
+<?php
+}
+?>
     </div>
   </div>
 </main>

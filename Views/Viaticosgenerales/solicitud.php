@@ -38,9 +38,9 @@ getModal('modalValidacionCompras', $data);
 
 
     <?php 
-      echo '<pre>';
-print_r($_SESSION['userData']);
-echo '</pre>';
+//       echo '<pre>';
+// print_r($_SESSION['userData']);
+// echo '</pre>';
     
     if ($_SESSION['userData']['id_rol'] == '1') { 
        if ($_SESSION['userData']['email_usuario'] == 'daniella.silva@ldrsolutions.com.mx') { echo "Imprimimos esto";?>
@@ -893,6 +893,8 @@ echo '</pre>';
                         <td><?= $usuarioSolicita['comentariosjefatura'] ?></td>
                       </tr>
 
+                     
+
                     </tbody>
                   </table>
                 </div>
@@ -930,6 +932,41 @@ echo '</pre>';
             }
             ?>
 
+                       <?php
+            if ($usuarioSolicita['estado_viatico'] >= 9) {
+            ?>
+              <h6 style="background-color: #d16032; color: white;font-size: 15px; padding: 6px;"><i class="fas fa-user-check"></i> Observaciones y respuesta proporcionadas por Compras</h6>
+              <!-- Información adicional del viaje -->
+              <div class="row mb-4">
+                <div class="col-12">
+
+                  <table class="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <th scope="row" style="width: 20%;"><i class="fas fa-clock"></i>Fecha de respuesta</th>
+                        <td><?= $usuarioSolicita['fechacompras'] ?></td>
+                      </tr>
+                      <tr>
+                        <th><i class="fas fa-comment-alt"></i> Comentarios u observaciones</th>
+                        <td><?= $usuarioSolicita['comentarioscompras'] ?></td>
+                      </tr>
+
+                           <tr> 
+                        <th><i class="fas fa-comment-alt"></i> Comprobante de pago (Adelanto)</th>
+                        <td><a href="<?= media(); ?>/uploads/comprobantes/<?= $usuarioSolicita['rutadestino'] ?>" class="btn btn-info btn-sm" title="Ver Comprobantes">
+                            <i class="fas fa-eye"></i> Ver comprobante
+                          </a></td> 
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            <?php
+            }
+            ?>
+
 
 
             <div class="row d-print-none mt-2">
@@ -939,14 +976,14 @@ echo '</pre>';
                 if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $_SESSION['userData']['id_rol'] == '3') {
                 if ($usuarioSolicita['estado_viatico'] == 2) { ?>
                   <button class="btn btn-success" style="width: 300px;" type="button" onclick="openModal(<?php echo $usuarioSolicita['idviatico'] ?>)">
-                    <i class="fa fa-tasks"></i> Gestionarss
+                    <i class="fa fa-tasks"></i> Gestionar
                   </button>
                 <?php } }?>
 
                 <?php 
 
-                echo $_SESSION['userData']['id_rol'] ; 
-                echo 'usuario: '. $usuarioSolicitaEstado['id_colaborador'];
+                // echo $_SESSION['userData']['id_rol'] ; 
+                // echo 'usuario: '. $usuarioSolicitaEstado['id_colaborador'];
                  if ($_SESSION['userData']['id_colaborador'] != $usuarioSolicitaEstado['id_colaborador'] && $_SESSION['userData']['id_rol'] == '4' && $usuarioSolicita['estado_viatico'] < 7 ) {
                 ?>
                   <button class="btn btn-info" style="width: 300px;" type="button" onclick="openModalValidatejefeSuperior(<?php echo $usuarioSolicita['idviatico'] ?>)">
@@ -954,7 +991,7 @@ echo '</pre>';
                   </button>
                 <?php }else if($_SESSION['userData']['email_usuario'] == 'daniella.silva@ldrsolutions.com.mx' && $usuarioSolicita['estado_viatico'] < 8){  ?>
    <button class="btn btn-info" style="width: 300px;" type="button" onclick="openModalValidatejefeSuperior(<?php echo $usuarioSolicita['idviatico'] ?>)">
-                    <i class="fa fa-tasks"></i> Gestionarrr
+                    <i class="fa fa-tasks"></i> Gestionar
                   </button>
                  <?php }  ?>
 

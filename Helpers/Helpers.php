@@ -128,13 +128,13 @@ function sendMailLocal($data, $template, $correos_copia){
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'carlos.cruz@ldrsolutions.com.mx';
-        $mail->Password   = 'pgyo wnsh cdwy aajh'; // Asegúrate que es contraseña de aplicación
+        $mail->Username   = 'notificacion@ldrsolutions.com.mx';
+        $mail->Password   = 'ppiz zylc bpod tczi';
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port       = 465;
 
         // Remitente y destinatarios
-        $mail->setFrom('carlos.cruz@ldrsolutions.com.mx', 'Notificaciones LDR');
+        $mail->setFrom('notificacion@ldrsolutions.com.mx', 'Notificaciones LDR');
         $mail->addAddress($data['email']);
         
         foreach ($cc as $correo_copia) {
@@ -157,6 +157,28 @@ function sendMailLocal($data, $template, $correos_copia){
         echo "Error en el envío del mensaje: {$mail->ErrorInfo}";
          return false;
     }
+}
+
+
+function formatearFechaCompleta($fecha) {
+  $dias = [
+    'Sunday' => 'Domingo', 'Monday' => 'Lunes', 'Tuesday' => 'Martes',
+    'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado'
+  ];
+
+  $meses = [
+    '01' => 'Enero', '02' => 'Febrero', '03' => 'Marzo', '04' => 'Abril',
+    '05' => 'Mayo', '06' => 'Junio', '07' => 'Julio', '08' => 'Agosto',
+    '09' => 'Septiembre', '10' => 'Octubre', '11' => 'Noviembre', '12' => 'Diciembre'
+  ];
+
+  $dt = new DateTime($fecha);
+  $diaSemana = $dias[$dt->format('l')];  // Día en español
+  $dia = $dt->format('d');
+  $mes = $meses[$dt->format('m')];       // Mes en español
+  $anio = $dt->format('Y');
+
+  return "$diaSemana, $dia de $mes de $anio";
 }
 
 

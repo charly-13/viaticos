@@ -36,6 +36,12 @@ class ViaticosgeneralesModel extends Mysql
 	public $strRfcemisor;
 	public $strSubtotal;
 	public $strFechafactura;
+	public $strTipo;
+	public $intIdcolaborador;
+	public $strBanco;
+	public $strTitular;
+	public $strNumCuenta;
+	public $strClave;
 
 	public function __construct()
 	{
@@ -217,6 +223,9 @@ class ViaticosgeneralesModel extends Mysql
 			vg.fechajefatura,
 			vg.comentariosjefaturasup,
 			vg.fechajefaturasup,
+			vg.comentarioscompras,
+			vg.fechacompras,
+			vg.rutadestino,
             u.id_colaborador,
             c.id_colaborador,
 			c.nombre_1,
@@ -311,18 +320,18 @@ class ViaticosgeneralesModel extends Mysql
 
 	
 
-		public function updateConceptoComprobante(int $idconcepto)
-	{
-		$this->intConceptoid = $idconcepto ;
+	// 	public function updateConceptoComprobante(int $idconcepto)
+	// {
+	// 	$this->intConceptoid = $idconcepto ;
 	
 
 
-			$sql = "UPDATE viaticos_conceptos SET tiene_comprobante	 = ? WHERE idconcepto = $this->intConceptoid ";
-			$arrData = array(2);
-			$request = $this->update($sql, $arrData);
+	// 		$sql = "UPDATE viaticos_conceptos SET tiene_comprobante	 = ? WHERE idconcepto = $this->intConceptoid ";
+	// 		$arrData = array(2);
+	// 		$request = $this->update($sql, $arrData);
 
-		return $request;
-	}
+	// 	return $request;
+	// }
 
 	public function gestionJefatura(int $dviatico , int $estado, string $comentariosjefatura)
 	{
@@ -381,81 +390,142 @@ class ViaticosgeneralesModel extends Mysql
 		return $request;
 	}
 
+
+	
+
+			public function selectBancos()
+		{
+			$sql = "SELECT * FROM bancos 
+					 ";
+			$request = $this->select_all($sql);
+			return $request;
+		}
+
+		
+
+				public function updateColaboradores(int $intIdcolaborador,string  $strlistBancos, string $strbiaticos_nombre_titular, string $strbiaticos_numero_cuenta, string   $strbiaticos_clabe_interbancaria){
+			$this->intIdcolaborador = $intIdcolaborador;
+			$this->strBanco = $strlistBancos;
+			$this->strTitular = $strbiaticos_nombre_titular;
+			$this->strNumCuenta = $strbiaticos_numero_cuenta;
+			$this->strClave = $strbiaticos_clabe_interbancaria;
+		
+
+	
+				$sql = "UPDATE colaboradores SET biaticos_id_banco = ?, biaticos_nombre_titular = ?, biaticos_numero_cuenta = ?, biaticos_clabe_interbancaria = ? WHERE id_colaborador = $this->intIdcolaborador ";
+				$arrData = array($this->strBanco, 
+								 $this->strTitular, 
+								 $this->strNumCuenta,
+								 $this->strClave);
+				$request = $this->update($sql,$arrData);
+		
+		    return $request;			
+		}
+
+						public function getUusarioData(int $intIdcolaborador){
+		$this->intIdcolaborador = $intIdcolaborador;
+		$sql = "SELECT 
+			 u.id_usuario,
+            u.id_colaborador,
+            c.id_colaborador,
+			c.nombre_1,
+			c.apellido_paterno,
+			c.apellido_materno,
+			c.telefono_personal,
+			c.email_corporativo,
+			c.id_rol,
+			c.id_banco,
+			c.cuenta_bancaria,
+			c.clabe_interbancaria,
+			c.biaticos_id_banco,
+			c.biaticos_nombre_titular,
+			c.biaticos_numero_cuenta,
+			c.biaticos_clabe_interbancaria
+			FROM usuarios as u
+			INNER JOIN colaboradores as c
+			ON u.id_colaborador = c.id_colaborador
+			WHERE u.id_usuario = $this->intIdcolaborador";
+		$request = $this->select($sql);
+		return $request;		
+		}
+		
 	
 
 	
-	public function inserComprobantesViaticos(int $concepto, int $viaticoid, string $rutaxml, string $rutapdf, string $fecha, string $comentarios, string $uuid, string $rfcemisor , $subtotal, $total, $fechafactura)
-	{
+	// public function inserComprobantesViaticos(int $concepto, int $viaticoid, string $rutaxml, string $rutapdf, string $fecha, string $comentarios, string $uuid, string $rfcemisor , $subtotal, $total, $fechafactura,$tipo)
+	// {
 
-		$return = 0;
-		$this->intConcepto = $concepto;
-		$this->intViaticoid = $viaticoid;
-		$this->strRutaxml = $rutaxml;
-		$this->stRrutapdf = $rutapdf;
-		$this->strFecha_salida = $fecha;
-		$this->strComentarios = $comentarios;
-		$this->strUuid = $uuid;
-		$this->strRfcemisor = $rfcemisor;
-		$this->strSubtotal = $subtotal;
-		$this->strTotal = $total;
-		$this->strFechafactura = $fechafactura;
-
-
-		// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
-		// $request = $this->select_all($sql);
-
-		// if(empty($request))
-		// {
-		$query_insert  = "INSERT INTO comprobantes_viaticos_generales(conceptoid,viaticoid,rutaxml,rutapdf,fecha,comentarios,uuid,rfcemisor,subtotal,total,fechafactura) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-		$arrData = array(
-			$this->intConcepto,
-			$this->intViaticoid,
-			$this->strRutaxml,
-			$this->stRrutapdf,
-			$this->strFecha_salida,
-			$this->strComentarios,
-			$this->strUuid,
-			$this->strRfcemisor,
-			$this->strSubtotal,
-			$this->strTotal,
-			$this->strFechafactura
-		);
-		$request_insert = $this->insert($query_insert, $arrData);
-		$return = $request_insert;
-		// }else{
-		// 	$return = "exist";
-		// }
-		return $return;
-	}
-
-		public function insertTotalesFactura(int $concepto, int $viaticoid, string $total)
-	{
-
-		$return = 0;
-		$this->intConcepto = $concepto;
-		$this->intViaticoid = $viaticoid;
-		$this->strTotal = $total;
+	// 	$return = 0;
+	// 	$this->intConcepto = $concepto;
+	// 	$this->intViaticoid = $viaticoid;
+	// 	$this->strRutaxml = $rutaxml;
+	// 	$this->stRrutapdf = $rutapdf;
+	// 	$this->strFecha_salida = $fecha;
+	// 	$this->strComentarios = $comentarios;
+	// 	$this->strUuid = $uuid;
+	// 	$this->strRfcemisor = $rfcemisor;
+	// 	$this->strSubtotal = $subtotal;
+	// 	$this->strTotal = $total;
+	// 	$this->strFechafactura = $fechafactura;
+	// 	$this->strTipo = $tipo;
 
 
+	// 	// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
+	// 	// $request = $this->select_all($sql);
 
-		// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
-		// $request = $this->select_all($sql);
+	// 	// if(empty($request))
+	// 	// {
+	// 	$query_insert  = "INSERT INTO comprobantes_viaticos_generales(conceptoid,viaticoid,rutaxml,rutapdf,fecha,comentarios,uuid,rfcemisor,subtotal,total,fechafactura,tipo) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+	// 	$arrData = array(
+	// 		$this->intConcepto,
+	// 		$this->intViaticoid,
+	// 		$this->strRutaxml,
+	// 		$this->stRrutapdf,
+	// 		$this->strFecha_salida,
+	// 		$this->strComentarios,
+	// 		$this->strUuid,
+	// 		$this->strRfcemisor,
+	// 		$this->strSubtotal,
+	// 		$this->strTotal,
+	// 		$this->strFechafactura,
+	// 		$this->strTipo
+	// 	);
+	// 	$request_insert = $this->insert($query_insert, $arrData);
+	// 	$return = $request_insert;
+	// 	// }else{
+	// 	// 	$return = "exist";
+	// 	// }
+	// 	return $return;
+	// }
 
-		// if(empty($request))
-		// {
-		$query_insert  = "INSERT INTO totales_vgfacturas_conceptos(conceptoid,viaticoid,total,fecha_subida) VALUES(?,?,?, NOW())";
-		$arrData = array(
-			$this->intConcepto,
-			$this->intViaticoid,
-	        $this->strTotal,
-		);
-		$request_insert = $this->insert($query_insert, $arrData);
-		$return = $request_insert;
-		// }else{
-		// 	$return = "exist";
-		// }
-		return $return;
-	}
+	// 	public function insertTotalesFactura(int $concepto, int $viaticoid, string $total)
+	// {
+
+	// 	$return = 0;
+	// 	$this->intConcepto = $concepto;
+	// 	$this->intViaticoid = $viaticoid;
+	// 	$this->strTotal = $total;
+
+
+
+	// 	// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
+	// 	// $request = $this->select_all($sql);
+
+	// 	// if(empty($request))
+	// 	// {
+	// 	$query_insert  = "INSERT INTO totales_vgfacturas_conceptos(conceptoid,viaticoid,total,fecha_subida) VALUES(?,?,?, NOW())";
+	// 	$arrData = array(
+	// 		$this->intConcepto,
+	// 		$this->intViaticoid,
+	//         $this->strTotal,
+	// 	);
+	// 	$request_insert = $this->insert($query_insert, $arrData);
+	// 	$return = $request_insert;
+	// 	// }else{
+	// 	// 	$return = "exist";
+	// 	// }
+	// 	return $return;
+	// }
 	
 
 	

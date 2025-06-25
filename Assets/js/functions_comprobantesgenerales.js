@@ -4,6 +4,11 @@ let divLoading = document.querySelector("#divLoading");
 document.addEventListener('DOMContentLoaded', function () {
 
 
+    if (window.location.pathname.startsWith('/viaticos/comprobantesgenerales/solicitud/')) {
+    document.body.classList.add('sidenav-toggled');
+  }
+
+
 
         if (localStorage.getItem('abrirModalViaticos') === '1') {
         localStorage.removeItem('abrirModalViaticos'); // Evita que se abra siempre
@@ -185,114 +190,114 @@ tinymce.init({
 
 
 
-function fntViewInfo(idcategoria) {
-    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
-    request.open("GET", ajaxUrl, true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState == 4 && request.status == 200) {
-            let objData = JSON.parse(request.responseText);
-            if (objData.status) {
-                let estado = objData.data.status == 1 ?
-                    '<span class="badge badge-success">Activo</span>' :
-                    '<span class="badge badge-danger">Inactivo</span>';
-                document.querySelector("#celId").innerHTML = objData.data.idcategoria;
-                document.querySelector("#celNombre").innerHTML = objData.data.nombre;
-                document.querySelector("#celDescripcion").innerHTML = objData.data.descripcion;
-                document.querySelector("#celEstado").innerHTML = estado;
-                document.querySelector("#imgCategoria").innerHTML = '<img src="' + objData.data.url_portada + '"></img>';
-                $('#modalViewCategoria').modal('show');
-            } else {
-                swal("Error", objData.msg, "error");
-            }
-        }
-    }
-}
+// function fntViewInfo(idcategoria) {
+//     let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+//     let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
+//     request.open("GET", ajaxUrl, true);
+//     request.send();
+//     request.onreadystatechange = function () {
+//         if (request.readyState == 4 && request.status == 200) {
+//             let objData = JSON.parse(request.responseText);
+//             if (objData.status) {
+//                 let estado = objData.data.status == 1 ?
+//                     '<span class="badge badge-success">Activo</span>' :
+//                     '<span class="badge badge-danger">Inactivo</span>';
+//                 document.querySelector("#celId").innerHTML = objData.data.idcategoria;
+//                 document.querySelector("#celNombre").innerHTML = objData.data.nombre;
+//                 document.querySelector("#celDescripcion").innerHTML = objData.data.descripcion;
+//                 document.querySelector("#celEstado").innerHTML = estado;
+//                 document.querySelector("#imgCategoria").innerHTML = '<img src="' + objData.data.url_portada + '"></img>';
+//                 $('#modalViewCategoria').modal('show');
+//             } else {
+//                 swal("Error", objData.msg, "error");
+//             }
+//         }
+//     }
+// }
 
-function fntEditInfo(element, idcategoria) {
-    rowTable = element.parentNode.parentNode.parentNode;
-    document.querySelector('#titleModal').innerHTML = "Actualizar Categoría";
-    document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
-    document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
-    document.querySelector('#btnText').innerHTML = "Actualizar";
-    let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-    let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
-    request.open("GET", ajaxUrl, true);
-    request.send();
-    request.onreadystatechange = function () {
-        if (request.readyState == 4 && request.status == 200) {
-            let objData = JSON.parse(request.responseText);
-            if (objData.status) {
-                document.querySelector("#idCategoria").value = objData.data.idcategoria;
-                document.querySelector("#txtNombre").value = objData.data.nombre;
-                document.querySelector("#txtDescripcion").value = objData.data.descripcion;
-                document.querySelector('#foto_actual').value = objData.data.portada;
-                document.querySelector("#foto_remove").value = 0;
+// function fntEditInfo(element, idcategoria) {
+//     rowTable = element.parentNode.parentNode.parentNode;
+//     document.querySelector('#titleModal').innerHTML = "Actualizar Categoría";
+//     document.querySelector('.modal-header').classList.replace("headerRegister", "headerUpdate");
+//     document.querySelector('#btnActionForm').classList.replace("btn-primary", "btn-info");
+//     document.querySelector('#btnText').innerHTML = "Actualizar";
+//     let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+//     let ajaxUrl = base_url + '/Categorias/getCategoria/' + idcategoria;
+//     request.open("GET", ajaxUrl, true);
+//     request.send();
+//     request.onreadystatechange = function () {
+//         if (request.readyState == 4 && request.status == 200) {
+//             let objData = JSON.parse(request.responseText);
+//             if (objData.status) {
+//                 document.querySelector("#idCategoria").value = objData.data.idcategoria;
+//                 document.querySelector("#txtNombre").value = objData.data.nombre;
+//                 document.querySelector("#txtDescripcion").value = objData.data.descripcion;
+//                 document.querySelector('#foto_actual').value = objData.data.portada;
+//                 document.querySelector("#foto_remove").value = 0;
 
-                if (objData.data.status == 1) {
-                    document.querySelector("#listStatus").value = 1;
-                } else {
-                    document.querySelector("#listStatus").value = 2;
-                }
-                $('#listStatus').selectpicker('render');
+//                 if (objData.data.status == 1) {
+//                     document.querySelector("#listStatus").value = 1;
+//                 } else {
+//                     document.querySelector("#listStatus").value = 2;
+//                 }
+//                 $('#listStatus').selectpicker('render');
 
-                if (document.querySelector('#img')) {
-                    document.querySelector('#img').src = objData.data.url_portada;
-                } else {
-                    document.querySelector('.prevPhoto div').innerHTML = "<img id='img' src=" + objData.data.url_portada + ">";
-                }
+//                 if (document.querySelector('#img')) {
+//                     document.querySelector('#img').src = objData.data.url_portada;
+//                 } else {
+//                     document.querySelector('.prevPhoto div').innerHTML = "<img id='img' src=" + objData.data.url_portada + ">";
+//                 }
 
-                if (objData.data.portada == 'portada_categoria.png') {
-                    document.querySelector('.delPhoto').classList.add("notBlock");
-                } else {
-                    document.querySelector('.delPhoto').classList.remove("notBlock");
-                }
+//                 if (objData.data.portada == 'portada_categoria.png') {
+//                     document.querySelector('.delPhoto').classList.add("notBlock");
+//                 } else {
+//                     document.querySelector('.delPhoto').classList.remove("notBlock");
+//                 }
 
-                $('#modalFormViaticosGenerales').modal('show');
+//                 $('#modalFormViaticosGenerales').modal('show');
 
-            } else {
-                swal("Error", objData.msg, "error");
-            }
-        }
-    }
-}
+//             } else {
+//                 swal("Error", objData.msg, "error");
+//             }
+//         }
+//     }
+// }
 
-function fntDelInfo(idcategoria) {
-    swal({
-        title: "Eliminar Categoría",
-        text: "¿Realmente quiere eliminar al categoría?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si, eliminar!",
-        cancelButtonText: "No, cancelar!",
-        closeOnConfirm: false,
-        closeOnCancel: true
-    }, function (isConfirm) {
+// function fntDelInfo(idcategoria) {
+//     swal({
+//         title: "Eliminar Categoría",
+//         text: "¿Realmente quiere eliminar al categoría?",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonText: "Si, eliminar!",
+//         cancelButtonText: "No, cancelar!",
+//         closeOnConfirm: false,
+//         closeOnCancel: true
+//     }, function (isConfirm) {
 
-        if (isConfirm) {
-            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url + '/Categorias/delCategoria';
-            let strData = "idCategoria=" + idcategoria;
-            request.open("POST", ajaxUrl, true);
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send(strData);
-            request.onreadystatechange = function () {
-                if (request.readyState == 4 && request.status == 200) {
-                    let objData = JSON.parse(request.responseText);
-                    if (objData.status) {
-                        swal("Eliminar!", objData.msg, "success");
-                        tableComprobantes.api().ajax.reload();
-                    } else {
-                        swal("Atención!", objData.msg, "error");
-                    }
-                }
-            }
-        }
+//         if (isConfirm) {
+//             let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+//             let ajaxUrl = base_url + '/Categorias/delCategoria';
+//             let strData = "idCategoria=" + idcategoria;
+//             request.open("POST", ajaxUrl, true);
+//             request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//             request.send(strData);
+//             request.onreadystatechange = function () {
+//                 if (request.readyState == 4 && request.status == 200) {
+//                     let objData = JSON.parse(request.responseText);
+//                     if (objData.status) {
+//                         swal("Eliminar!", objData.msg, "success");
+//                         tableComprobantes.api().ajax.reload();
+//                     } else {
+//                         swal("Atención!", objData.msg, "error");
+//                     }
+//                 }
+//             }
+//         }
 
-    });
+//     });
 
-}
+// }
 
 
 
@@ -740,11 +745,13 @@ function evaluarComprobante(button, estado, idcomprobante) {
       alert('Error al actualizar: ' + data.msg);
     }
   })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Hubo un problema al conectar con el servidor.');
-  });
+//   .catch(error => {
+//     console.error('Error:', error);
+//     alert('Hubo un problema al conectar con el servidor.');
+//   });
 }
+
+
 
 
 // function evaluarComprobante(button, estado, idcomprobante) {

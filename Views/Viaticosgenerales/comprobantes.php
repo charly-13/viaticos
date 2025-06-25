@@ -49,7 +49,7 @@ getModal('modalAddComprobantes', $data);
                     <th class="text-center">Monto Diario</th>
                     <th class="text-right">Subtotal</th>
                     <th class="text-center col-th">Opciones</th>
-                  </tr>
+                  </tr>   
                 </thead>
                 <tbody>
                   <?php
@@ -67,7 +67,7 @@ getModal('modalAddComprobantes', $data);
                         <?php if ($concepto['tiene_comprobante']=="1") {   ?>
 
                           <!-- Botón Agregar Comprobante -->
-                          <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idconcepto'] ?>,<?= $usuarioSolicita['idviatico'] ?>,<?= $concepto['dias'] ?>, '<?= $usuarioSolicita['fecha_salida'] ?>')">
+                          <button class="btn btn-success btn-sm" title="Agregar Comprobante" onclick="modalAgregarComprobantes(<?= $concepto['idconcepto'] ?>,<?= $usuarioSolicita['idviatico'] ?>,<?= $concepto['dias'] ?>, '<?= $usuarioSolicita['fecha_salida'] ?>', '<?= htmlspecialchars($concepto['concepto']) ?>')">
                             <i class="fas fa-plus-circle"></i> Agregar
                           </button>
                             <?php 

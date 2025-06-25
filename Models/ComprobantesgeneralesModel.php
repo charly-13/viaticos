@@ -370,6 +370,49 @@ public function selectSolicitudComprobante(int $viaticoid)
 		return $return;
 	}
 
+
+			public function insertTotalesFactura(int $concepto, int $viaticoid, string $total)
+	{
+
+		$return = 0;
+		$this->intConcepto = $concepto;
+		$this->intViaticoid = $viaticoid;
+		$this->strTotal = $total;
+
+
+
+		// $sql = "SELECT * FROM  viaticos_generales WHERE usuarioid = '{$this->intUsuarioid}' ";
+		// $request = $this->select_all($sql);
+
+		// if(empty($request))
+		// {
+		$query_insert  = "INSERT INTO totales_vgfacturas_conceptos(conceptoid,viaticoid,total,fecha_subida) VALUES(?,?,?, NOW())";
+		$arrData = array(
+			$this->intConcepto,
+			$this->intViaticoid,
+	        $this->strTotal,
+		);
+		$request_insert = $this->insert($query_insert, $arrData);
+		$return = $request_insert;
+		// }else{
+		// 	$return = "exist";
+		// }
+		return $return;
+	}
+
+	
+		public function updateConceptoComprobante(int $idconcepto)
+	{
+		$this->intConceptoid = $idconcepto ;
+	
+
+
+			$sql = "UPDATE viaticos_conceptos SET tiene_comprobante	 = ? WHERE idconcepto = $this->intConceptoid ";
+			$arrData = array(2);
+			$request = $this->update($sql, $arrData);
+
+		return $request;
+	}
 	
 	
 	public function evaluarComprobante(int $idcomprobante, int $estado_documento, string $comentario_compras)

@@ -33,6 +33,7 @@
     u.avatar,
     u.id_tipo_usuario,
 
+    c.id_colaborador,
     c.numero_colaborador,
     c.nombre_1,
     c.nombre_2,
@@ -46,6 +47,13 @@
     c.id_area,
     c.id_jefe_directo,
     c.id_rol,
+    c.id_banco,
+    c.cuenta_bancaria,
+    c.clabe_interbancaria,
+    c.biaticos_id_banco,
+    c.biaticos_nombre_titular,
+    c.biaticos_numero_cuenta,
+    c.biaticos_clabe_interbancaria,
 
     r.idrol AS rol_id,
     r.nombre AS nombre_rol,

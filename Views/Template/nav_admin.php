@@ -34,7 +34,7 @@
                 <li><a class="treeview-item" href="<?= base_url(); ?>/viaticosgenerales"><i class="icon fa fa-circle-o"></i> Viáticos Generales</a></li>
                
               
-                <li><a class="treeview-item" href="<?= base_url(); ?>/"><i class="icon fa fa-circle-o"></i> Vuelos y Hoteles</a></li>
+                <li><a class="treeview-item" href="#"><i class="icon fa fa-circle-o"></i> Vuelos y Hoteles</a></li>
                
             </ul>
         </li>

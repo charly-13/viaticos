@@ -595,12 +595,12 @@
   .rechazado { background-color: #f8d7da; color: #721c24; }
   .pendiente { background-color: #fff3cd; color: #856404; }
 
-  .status-comment {
+  /* .status-comment {
     margin-top: 4px;
     font-size: 0.85em;
     color: #555;
     font-style: italic;
-  }
+  } */
   .document-links {
     display: flex;
     gap: 8px;
@@ -799,3 +799,98 @@
       padding: 0.25rem 0.5rem;
       font-size: 0.75rem;
     }
+
+
+
+    .comprobante-card {
+      border: 1px solid #dee2e6;
+      border-left: 5px solid #0d6efd;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease-in-out;
+    }
+    .comprobante-card.aprobado { border-left-color: #198754 !important; }
+    .comprobante-card.rechazado { border-left-color: #dc3545 !important; }
+    .comprobante-header {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+    .day-header {
+      background-color: #e9ecef;
+      padding: 1rem 1.5rem;
+      border-left: 6px solid #6c757d;
+      margin: 2rem 0 1rem;
+      border-radius: 0.25rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: #495057;
+    }
+    .icono-doc {
+      margin-right: 0.5rem;
+    }
+    .btn-group-sm > .btn {
+      min-width: 48%;
+    }
+    textarea.form-control {
+      resize: none;
+      font-size: 0.9rem;
+    }
+
+
+    .totalesGenerales{
+     background: #ce5e3a;
+    border-radius: 16px;
+    color: white;
+    }
+
+        .table-actions {
+      min-width: 220px; /* Ajusta según necesites */
+    }
+
+        .btn-group-sm .btn {
+      margin-bottom: 0.25rem;
+    }
+
+     .btn-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    font-size: 13px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: white;
+    margin-right: 6px;
+    white-space: nowrap;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-action:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  .btn-action i {
+    font-size: 14px;
+  }
+
+  .btn-action.solicitud {
+    background-color: #0d6efd; /* Azul */
+  }
+
+  .btn-action.deposito {
+    background-color: #0dcaf0; /* Celeste */
+    color: #212529;
+  }
+
+  .btn-action.comprobante {
+    background-color: #6c757d; /* Gris oscuro */
+  }
+
+  .btn-group-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }

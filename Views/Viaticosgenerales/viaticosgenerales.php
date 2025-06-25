@@ -14,7 +14,7 @@
               
                 <button class="btn btn-primary" type="button" onclick="openModal();" ><i class="fas fa-plus-circle"></i> Nuevo</button>
         
-            </h1>
+            </h1> 
         </div>
         <ul class="app-breadcrumb breadcrumb">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -36,7 +36,7 @@
                           <th>Centro de Costo</th>
                           <th>Total</th>
                           <th>Estado</th>
-                          <th class="col-opciones">Acciones</th>
+                          <th class="table-actions">Acciones</th>
                         </tr>
                       </thead>
                       <tbody>

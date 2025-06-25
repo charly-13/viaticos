@@ -333,6 +333,61 @@ public function solicitudesPendientesDierccionGral()
 	return $request;
 }
 
+public function mostrarTodasSolicitudes()
+{
+	$rolid = $_SESSION['userData']['id_rol'];
+	$idUser = $_SESSION['userData']['id_colaborador'];
+
+	// Solo ejecutamos la consulta SI el usuario es DIRECTOR (rol 4)
+	// if ($rolid != 4) {
+	// 	return []; // No es director → devolver un array vacío → no muestra nada
+	// }
+
+	$where = "WHERE vg.estado = 10";
+
+	$sql = "SELECT
+				vg.idviatico,
+				vg.codigo_solicitud,
+				vg.usuarioid,
+				vg.idjefedirecto,
+				vg.idjefedirectosuperior,
+				vg.nombreusuario,
+				vg.centrocostoid,
+				vg.fecha_salida,
+				vg.fecha_regreso,
+				vg.motivo,
+				vg.descripcion,
+				vg.lugar_destino,
+				vg.fechacreacion,
+				vg.estado,
+				vg.actualizado_por,
+				vg.fechaactualizacion,
+				vg.total,
+				vg.dias,
+				vg.comentariosjefatura,
+				vg.fechajefatura,
+				vg.comentariosjefaturasup,
+				vg.fechajefaturasup,
+				vg.comentarioscompras,
+				vg.fechacompras,
+				us.id_usuario,
+				us.correo, 
+				us.id_colaborador, 
+				col.id_colaborador,
+				col.id_rol
+			FROM viaticos_generales AS vg
+			INNER JOIN usuarios AS us ON vg.usuarioid = us.id_usuario
+			INNER JOIN colaboradores as col ON us.id_colaborador = col.id_colaborador 
+			WHERE vg.estado = 10
+			ORDER BY vg.fechacreacion DESC
+			LIMIT 5";
+
+	$request = $this->select_all($sql);
+	return $request;
+}
+
+
+
 
 
 

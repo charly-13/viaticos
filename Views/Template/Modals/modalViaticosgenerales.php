@@ -16,6 +16,7 @@
              <input type="hidden" id="" name="" value="">
           <input type="hidden" id="idjefedirecto" name="idjefedirecto" > 
           <input type="hidden" id="idjefedirectosuperior" name="idjefedirectosuperior" > 
+          <input type="hidden" id="id_colaborador" name="id_colaborador" > 
            <input type="hidden" id="email_jefe_directo" name="email_jefe_directo" value="<?= $_SESSION['userData']['email_jefe'] ?>">
           <input class="form-control" id="fechacreacion" name="fechacreacion" type="datetime-local" readonly style="display: none;">
 
@@ -51,10 +52,7 @@
                   <label class="control-label">Fecha de Regreso <span class="required">*</span></label>
                   <input class="form-control" id="fecha_regreso" name="fecha_regreso" type="date" required>
                 </div>
-
               </div>
-
-
               <div class="row">
                 <div class="col-6 mb-3">
 
@@ -63,16 +61,7 @@
                   <h2 class="infoDiasSeleccionados" id="infoDias"></h2>
                   <input type="hidden" id="inputDias" name="inputDias">
                 </div>
-
-
-
               </div>
-
-
-
-
-
-
 
               <div class="row">
                 <div class="col-6 mb-3">
@@ -99,9 +88,6 @@
                   <input class="form-control" id="lugar_destino" name="lugar_destino" type="text" required>
                 </div>
               </div>
-
-
-
               <div class="mb-3">
                 <label class="control-label">Ingresa la descripción de las actividades a realizar. <span class="required">*</span></label>
                 <textarea class="form-control" id="txtDescripcion" name="txtDescripcion"></textarea>
@@ -110,6 +96,46 @@
 
             <!-- Columna Derecha (Tabla) -->
             <div class="col-md-6">
+
+            <!-- Datos Bancarios -->
+             <div id="divDatosBancarios">
+<div class="mb-3">
+  <h5 class="text-primary"><i class="fa fa-university"></i> Información Bancaria</h5>
+  <p class="text-muted">Confirme sus datos bancarios. Si desea usar otra cuenta, ingrésela en los campos correspondientes.</p>
+</div>
+
+
+            <!-- Inputs Bancarios -->
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label for="listBancos">Banco <span class="required">*</span></label>
+
+                  <label for="listBancos">Centro de Costo <span class="required">*</span></label>
+                  <select class="form-control" data-live-search="true" id="listBancos"  name="listBancos" required></select>
+     
+
+
+  </div>
+  <div class="col-md-6 mb-3">
+    <label for="biaticos_nombre_titular">Nombre del titular <span class="required">*</span></label>
+    <input type="text" class="form-control" id="biaticos_nombre_titular" name="biaticos_nombre_titular"  value="<?= $_SESSION['userData']['nombre_1'] . ' ' . $_SESSION['userData']['apellido_paterno'] . ' ' . $_SESSION['userData']['apellido_materno'] ?>" required>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label for="biaticos_numero_cuenta">Número de cuenta <span class="required">*</span></label>
+    <input type="text" class="form-control" id="biaticos_numero_cuenta" name="biaticos_numero_cuenta" maxlength="20" required>
+  </div>
+  <div class="col-md-6 mb-3">
+    <label for="biaticos_clabe_interbancaria">CLABE interbancaria <span class="required">*</span></label>
+    <input type="text" class="form-control" id="biaticos_clabe_interbancaria" name="biaticos_clabe_interbancaria" maxlength="18" required>
+  </div>
+</div>
+</div>
+
+
+
               <label>Conceptos <span class="required">*</span></label>
               <table class="table table-bordered">
                 <thead>
@@ -144,11 +170,6 @@
                   </tr>
                 </tfoot>
               </table>
-
-
-
-
-
               <!-- Botones centrados en 6 columnas cada uno -->
               <div class="row text-center">
                 <div class="col-6">
@@ -165,23 +186,9 @@
                 </div>
               </div>
 
-
-
-
-
             </div>
-
-
-
-
           </div>
-
-
         </form>
-
-
-
-
       </div>
     </div>
   </div>

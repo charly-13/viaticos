@@ -87,7 +87,7 @@ function procesarXMLDinamico(inputFile) {
   const contenedorDatos = inputFile.parentElement.querySelector('.datos-xml');
   contenedorDatos.innerHTML = '<div class="text-muted">Procesando archivo...</div>';
 
-  let ajaxUrl = base_url + '/Viaticosgenerales/procesarXML';
+  let ajaxUrl = base_url + '/Comprobantesgenerales/procesarXML';
 
   fetch(ajaxUrl, {
     method: 'POST',
@@ -124,7 +124,7 @@ function procesarXMLDinamico(inputFile) {
           </div>
         `;
          actualizarTotalGeneral();
-      // }
+      //  }
     } else {
       contenedorDatos.innerHTML = `<div class="alert alert-danger p-2 mb-1">${data.message}</div>`;
           actualizarTotalGeneral();
@@ -137,11 +137,11 @@ function procesarXMLDinamico(inputFile) {
   });
 }
 
-function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial = null) {
+function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial = null, conceptoNombre) {
   conceptoActual = idconcepto;
   viaticoActual = idviatico;
 
-  document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes`;
+  document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes - ${conceptoNombre}`;
   const contenedor = document.getElementById('contenedorDias');
   contenedor.innerHTML = '';
 
@@ -160,25 +160,28 @@ function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial =
       })()
     : new Date();
 
-  const tipos = ['Desayuno', 'Comida', 'Cena'];
-
   let tabla = `
     <div class="legend-box mb-3">
-      📌 Adjunta los comprobantes XML (obligatorio) y PDF o imagen (opcional) por cada comida y día. 
+      📌 Adjunta los comprobantes XML (obligatorio) y PDF o imagen (opcional) por cada ${conceptoNombre === 'Alimentación' ? 'comida y día' : 'día'}. 
       Al seleccionar un XML, se mostrará automáticamente la información extraída.
     </div>
 
     <div class="table-responsive">
-      <table class="table table-bordered table-striped align-middle text-cente">
+      <table class="table table-bordered table-striped align-middle text-center">
         <thead>
           <tr>
-            <th style="width: 10%;">Día</th>
+            <th style="width: 10%;">Día</th>`;
+
+  if (conceptoNombre === 'Alimentación') {
+    tabla += `
             <th>🍳 Desayuno</th>
             <th>🍽 Comida</th>
-            <th>🌙 Cena</th>
-          </tr>
-        </thead>
-        <tbody>`;
+            <th>🌙 Cena</th>`;
+  } else {
+    tabla += `<th>📄 Comprobante</th>`;
+  }
+
+  tabla += `</tr></thead><tbody>`;
 
   for (let i = 0; i < numDias; i++) {
     const fecha = new Date(fechaBase);
@@ -187,36 +190,135 @@ function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial =
 
     tabla += `<tr><td class="fw-semibold text-nowrap">📅 Día ${i + 1} (${fecha.toLocaleDateString()})</td>`;
 
-    tipos.forEach(tipo => {
+    if (conceptoNombre === 'Alimentación') {
+      const tipos = ['Desayuno', 'Comida', 'Cena'];
+      tipos.forEach(tipo => {
+        tabla += `
+          <td>
+            <input type="hidden" name="fechas[]" value="${fechaFormateada}">
+            <input type="hidden" name="tipos[]" value="${tipo}">
+            <input 
+              type="file" 
+              class="form-control form-control-sm mb-1" 
+              accept=\".xml\" 
+              required 
+              data-dia="${i + 1}" 
+              data-tipo="${tipo}" 
+              onchange="procesarXMLDinamico(this)">
+            <div class="datos-xml mb-1">Información XML aparecerá aquí...</div>
+            <input type="file" class="form-control form-control-sm mb-1" accept="application/pdf,image/*">
+            <textarea class="form-control form-control-sm" rows="3" placeholder="Comentario..."></textarea>
+          </td>`;
+      });
+    } else {
       tabla += `
         <td>
           <input type="hidden" name="fechas[]" value="${fechaFormateada}">
-          <input type="hidden" name="tipos[]" value="${tipo}">
+          <input type="hidden" name="tipos[]" value="${conceptoNombre}">
           <input 
             type="file" 
             class="form-control form-control-sm mb-1" 
-            accept=".xml" 
+            accept=\".xml\" 
             required 
             data-dia="${i + 1}" 
-            data-tipo="${tipo}" 
+            data-tipo="${conceptoNombre}" 
             onchange="procesarXMLDinamico(this)">
           <div class="datos-xml mb-1">Información XML aparecerá aquí...</div>
           <input type="file" class="form-control form-control-sm mb-1" accept="application/pdf,image/*">
-          <textarea class="form-control form-control-sm" rows="4" placeholder="Comentario..."></textarea>
+          <textarea class="form-control form-control-sm" rows="3" placeholder="Describe el motivo..."></textarea>
         </td>`;
-    });
+    }
 
     tabla += `</tr>`;
   }
 
-  tabla += `
-        </tbody>
-      </table>
-    </div>`;
+  tabla += `</tbody></table></div>`;
 
   contenedor.innerHTML = tabla;
   $('#modalFormAddComprobantes').modal('show');
 }
+
+
+// function modalAgregarComprobantes(idconcepto, idviatico, numDias, fechaInicial = null, conceptoNombre) {
+//   conceptoActual = idconcepto;
+//   viaticoActual = idviatico;
+
+//   document.getElementById('titleModalComprobante').innerText = `Adjuntar Comprobantes`;
+//   const contenedor = document.getElementById('contenedorDias');
+//   contenedor.innerHTML = '';
+
+//   const resumenTotal = document.getElementById('resumenTotalGastos');
+//   if (resumenTotal) resumenTotal.innerText = 'Total: $0.00';
+
+//   const inputTotal = document.getElementById('totalGastosFactura');
+//   if (inputTotal) inputTotal.value = '';
+
+//   facturasAdjuntadas.clear();
+
+//   let fechaBase = fechaInicial
+//     ? (() => {
+//         const [anio, mes, dia] = fechaInicial.split('-').map(Number);
+//         return new Date(anio, mes - 1, dia);
+//       })()
+//     : new Date();
+
+//   const tipos = ['Desayuno', 'Comida', 'Cena'];
+
+//   let tabla = `
+//     <div class="legend-box mb-3">
+//       📌 Adjunta los comprobantes XML (obligatorio) y PDF o imagen (opcional) por cada comida y día. 
+//       Al seleccionar un XML, se mostrará automáticamente la información extraída.
+//     </div>
+
+//     <div class="table-responsive">
+//       <table class="table table-bordered table-striped align-middle text-cente">
+//         <thead>
+//           <tr>
+//             <th style="width: 10%;">Día</th>
+//             <th>🍳 Desayuno</th>
+//             <th>🍽 Comida</th>
+//             <th>🌙 Cena</th>
+//           </tr>
+//         </thead>
+//         <tbody>`;
+
+//   for (let i = 0; i < numDias; i++) {
+//     const fecha = new Date(fechaBase);
+//     fecha.setDate(fechaBase.getDate() + i);
+//     const fechaFormateada = fecha.toISOString().split('T')[0];
+
+//     tabla += `<tr><td class="fw-semibold text-nowrap">📅 Día ${i + 1} (${fecha.toLocaleDateString()})</td>`;
+
+//     tipos.forEach(tipo => {
+//       tabla += `
+//         <td>
+//           <input type="hidden" name="fechas[]" value="${fechaFormateada}">
+//           <input type="hidden" name="tipos[]" value="${tipo}">
+//           <input 
+//             type="file" 
+//             class="form-control form-control-sm mb-1" 
+//             accept=".xml" 
+//             required 
+//             data-dia="${i + 1}" 
+//             data-tipo="${tipo}" 
+//             onchange="procesarXMLDinamico(this)">
+//           <div class="datos-xml mb-1">Información XML aparecerá aquí...</div>
+//           <input type="file" class="form-control form-control-sm mb-1" accept="application/pdf,image/*">
+//           <textarea class="form-control form-control-sm" rows="4" placeholder="Comentario..."></textarea>
+//         </td>`;
+//     });
+
+//     tabla += `</tr>`;
+//   }
+
+//   tabla += `
+//         </tbody>
+//       </table>
+//     </div>`;
+
+//   contenedor.innerHTML = tabla;
+//   $('#modalFormAddComprobantes').modal('show');
+// }
 
 
 
@@ -281,7 +383,7 @@ function guardarComprobantes() {
     }
   });
 
-  fetch(base_url + '/Viaticosgenerales/guardarComprobantess', {
+  fetch(base_url + '/Comprobantesgenerales/guardarComprobantess', {
     method: 'POST',
     body: comprobantesData
   })
@@ -293,7 +395,7 @@ function guardarComprobantes() {
         text: data.msg,
         type: "success"
       }, function () {
-        location.reload();
+        // location.reload();
       });
       $('#modalFormAddComprobantes').modal('hide');
       facturasAdjuntadas.clear();
